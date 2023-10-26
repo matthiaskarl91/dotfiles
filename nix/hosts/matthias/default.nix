@@ -1,12 +1,21 @@
 # hosts/YourHostName/default.nix
 { pkgs, config, ... }:
 {
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.systemPackages = [ pkgs.bottom ];
   #config.allowUnfree = true;
   # Make sure the nix daemon always runs
   services.nix-daemon.enable = true;
   programs.zsh.enable = true;
+
+
+  #programs.direnv = {
+  #  enable = true;
+  #  enableZshIntegration = true;
+  #  nix-direnv.enable = true;
+  #};
+
   system.defaults.dock.autohide = true;
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -20,9 +29,21 @@
       # steam
       bottom
       jq
-      obs-studio
+      jless
+      yabai
     ];
+
 
     home.stateVersion = "23.05";
   };
+  homebrew = {
+    enable = true;
+    autoUpdate = true;
+    # updates homebrew packages on activation,
+    # can make darwin-rebuild much slower (otherwise i'd forget to do it ever though)
+    casks = [
+      #"koekeishiya/formulae/yabai"
+    ];
+  };
+
 }
