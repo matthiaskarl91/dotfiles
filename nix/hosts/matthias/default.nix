@@ -15,7 +15,6 @@
   #  enableZshIntegration = true;
   #  nix-direnv.enable = true;
   #};
-
   system.defaults.dock.autohide = true;
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -28,9 +27,16 @@
     home.packages = with pkgs; [
       # steam
       bottom
+      #devenv
+      git
+      direnv
       jq
       jless
+      nodePackages_latest.pnpm
       yabai
+      rustup
+      # cargo
+      esphome
     ];
 
 
@@ -38,10 +44,11 @@
   };
   homebrew = {
     enable = true;
-    autoUpdate = true;
+    onActivation.autoUpdate = true;
     # updates homebrew packages on activation,
     # can make darwin-rebuild much slower (otherwise i'd forget to do it ever though)
     casks = [
+      "obs"
       #"koekeishiya/formulae/yabai"
     ];
   };
