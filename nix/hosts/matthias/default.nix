@@ -37,6 +37,7 @@
       rustup
       # cargo
       esphome
+      utm
     ];
 
 
