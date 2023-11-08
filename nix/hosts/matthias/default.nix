@@ -26,6 +26,7 @@
     home.homeDirectory = lib.mkForce "/Users/matthiaskarl/"; #c
     home.packages = with pkgs; [
       # steam
+      # alacritty
       bottom
       #devenv
       git
@@ -41,6 +42,52 @@
       utm
     ];
 
+    /*programs.alacritty = {
+      enable = true;
+      settings = {
+      font = rec {
+      size = 14;
+      normal.family = "Dank Mono";
+      normal.style = "Regular";
+      bold.style = "Bold";
+      italic.style = "Italic";
+      bold_italic.style = "Bold Italic";
+      };
+      env.TERM = "xterm-256color";
+      window.option_as_alt = "Both";
+      padding.x = 12;
+      padding.y = 12;
+      dynamic_padding = false;
+      decorations = "buttonless";
+      startup_mode = "Windowed";
+      colors = rec {
+      primary.background = "#161617";
+      primary.foreground = "#c9c7cd";
+      cursor.text = "#c9c7cd";
+      cursor.cursor = "#757581";
+      normal = rec {
+      black = "#27272a";
+      red = "#f5a191";
+      green = "#90b99f";
+      yellow = "#e6b99d";
+      blue = "#aca1cf";
+      magenta = "#e29eca";
+      cyan = "#ea83a5";
+      white = "#c1c0d4";
+      };
+      bright = rec {
+      black = "#353539";
+      red = "#ffae9f";
+      green = "#9dc6ac";
+      yellow = "#f0c5a9";
+      blue = "#b9aeda";
+      magenta = "#ecaad6";
+      cyan = "#f591b2";
+      white = "#cac9dd";
+      };
+      };
+      };
+      };*/
 
     home.stateVersion = "23.05";
   };
@@ -51,11 +98,11 @@
     config = {
       layout = "bsp";
       window_placement = "second_child";
-      window_gap = 12;
-      top_padding = 4;
-      bottom_padding = 4;
-      right_padding = 4;
-      left_padding = 4;
+      window_gap = 16;
+      top_padding = 12;
+      bottom_padding = 12;
+      right_padding = 12;
+      left_padding = 12;
       mouse_follows_focus = "on";
       mouse_modifier = "alt";
       mouse_action1 = "move";
@@ -64,6 +111,7 @@
     };
     extraConfig = ''
       yabai -m rule --add app="^Discord$" manage=off
+      yabai -m rule --add app="^1Password$" manage=off
     '';
   };
   services.skhd = {
@@ -114,6 +162,7 @@
       ctrl + alt - l : yabai -m window --warp east
     '';
   };
+
   homebrew = {
     enable = true;
     onActivation.autoUpdate = true;
