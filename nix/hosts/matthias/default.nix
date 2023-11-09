@@ -2,6 +2,7 @@
 { pkgs, config, ... }:
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.trustedUsers = [ "root" "matthiaskarl" ];
 
   environment.systemPackages = [ pkgs.bottom ];
   #config.allowUnfree = true;

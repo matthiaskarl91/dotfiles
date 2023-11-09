@@ -1,4 +1,6 @@
 configstore/
+nix/nixos.qcow2
+nix/keys/
 firebase/
 gcloud/
 gh/
