@@ -5,7 +5,7 @@
 
   # Configure networking
   networking.useDHCP = false;
-  networking.interface.eth0.useDHCP = true;
+  networking.interfaces.en0.useDHCP = true;
 
   #Create user vm
   services.getty.autologinUser = "vm";

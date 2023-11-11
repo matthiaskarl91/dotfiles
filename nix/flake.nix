@@ -17,7 +17,7 @@
       pkgs = nixpkgs.legacyPackages."${system}";
       linuxSystem = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
       darwin-builder = nixpkgs.lib.nixosSystem {
-        system = linuxSystem;
+        system = "x86_64-linux";
         modules = [
           "${nixpkgs}/nixos/modules/profiles/macos-builder.nix"
           {
@@ -34,26 +34,27 @@
         modules = [
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix
-          {
-            nix.distributedBuilds = true;
-            nix.buildMachines = [{
-              hostName = "ssh://builder@localhost";
-              system = linuxSystem;
-              maxJobs = 4;
-              supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
-            }];
+        ];
+        /*{
+          nix.distributedBuilds = true;
+          nix.buildMachines = [{
+          hostName = "builder@linux-builder";
+          sshKey = "/var/root/.ssh/builder_ed25519";
+          system = "x86_64-linux";
+          maxJobs = 4;
+          supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
+          }];
 
-            launchd.daemons.darwin-builder = {
-              command = "${darwin-builder.config.system.build.macos-builder-installer}/bin/create-builder";
-              serviceConfig = {
-                KeepAlive = true;
-                RunAtLoad = true;
-                StandardOutPath = "/var/log/darwin-builder.log";
-                StandardErrorPath = "/var/log/darwin-builder.log";
-              };
-            };
-          }
-        ]; # will be important later
+          launchd.daemons.darwin-builder = {
+          command = "${darwin-builder.config.system.build.macos-builder-installer}/bin/create-builder";
+          serviceConfig = {
+          KeepAlive = true;
+          RunAtLoad = true;
+          StandardOutPath = "/var/log/darwin-builder.log";
+          StandardErrorPath = "/var/log/darwin-builder.log";
+          };
+          };
+          }*/
       };
       images = {
         pi = (self.nixosConfigurations.pi.extendModules {
@@ -66,15 +67,24 @@
           modules = [
             ./hosts/vmlinux/base.nix
             ./hosts/vmlinux/vm.nix
+            {
+              virtualisation.vmVariant.virtualisation.host.pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+            }
           ];
         };
-        packages.x86_64-linux.linuxVM = self.nixosConfigurations.vmlinux.config.system.build.vm;
+        packages.x86_64-linux.vmlinux = self.nixosConfigurations.vmlinux.config.system.build.vm;
         pi = nixpkgs.lib.nixosSystem {
           system = "armv7";
           modules = [
             nixos-hardware.nixosModules.raspberry-pi-2
             ./hosts/pi/configuration.nix
             ./hosts/pi/base.nix
+            {
+              nixpkgs.config.allowUnsupportedSystem = true;
+              nixpkgs.hostPlatform.system = "armv7l-linux";
+              nixpkgs.buildPlatform.system = "x86_64-linux";
+              virtualisation.vmVariant.virtualisation.host.pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+            }
           ];
         };
       };
