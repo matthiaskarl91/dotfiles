@@ -8,8 +8,8 @@ github-copilot/
 kitty/
 lvim/
 nvim.bak/
-nvim/
 nvim_prime/
 qmk/
 yabai/
 yarn/
+.DS_STORE
