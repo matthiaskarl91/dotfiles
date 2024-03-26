@@ -34,6 +34,8 @@
         modules = [
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix
+          ./home/darwin/skhd.nix
+          ./home/darwin/yabai.nix
         ];
         /*{
           nix.distributedBuilds = true;

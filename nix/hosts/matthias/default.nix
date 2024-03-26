@@ -21,16 +21,15 @@
       direnv
       jq
       jless
+      modd
       nodePackages_latest.pnpm
       yabai
       skhd
       rustup
       esphome
       utm
-    ];
-    imports = [
-      ../../home/darwin/skhd.nix
-      ../../home/darwin/yabai.nix
+      putty
+      tmux
     ];
 
     home.stateVersion = "23.05";
