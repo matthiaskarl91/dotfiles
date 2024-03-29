@@ -25,7 +25,7 @@
 			enable = true;
 			internalInterfaces = [
 				"br0"
-				wguest"
+				"wguest"
 			];
 			externalInterface = "enp1s0";
 		};
