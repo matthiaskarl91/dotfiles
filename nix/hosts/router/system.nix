@@ -35,7 +35,7 @@
 			br0 = {
 				interfaces = [
 					"enp2s0"
-					"wlp3s0"
+					"wlp5s0"
 				];
 			};
 		};
@@ -44,7 +44,7 @@
 			useDHCP = false;
 			enp1s0.useDHCP = true;
 			enp2s0.useDHCP = true;
-			wlp3s0.useDHCP = true;
+			wlp5s0.useDHCP = true;
 
 			br0 = {
 				useDHCP = false;
@@ -72,7 +72,7 @@
     services.hostapd = {
       enable = true;
       radios = {
-        wlp1s0 = {
+        wlp5s0 = {
           countryCode = "DE";
           channel = 124;
           band = "5g";
@@ -88,7 +88,7 @@
             require = false;
           };
           networks = {
-            wlp1s0 = {
+            wlp5s0 = {
               ssid = "mickymaus";
               bssid = "";
               authentication = {
