@@ -84,43 +84,6 @@
       };
     };
   };
-    /*services.hostapd = {
-      enable = true;
-      radios = {
-        wlp5s0 = {
-          countryCode = "DE";
-          channel = 124;
-          band = "5g";
-          settings = {
-            logger_syslog = 127;
-            logger_syslog_level = 2;
-            logger_stdout = 127;
-            logger_stdout_level = 2;
-          };
-          wifi4 = {
-            enable = true;
-            capabilities = [ "HT40+" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "DSSS_CCK-40" ];
-            require = false;
-          };
-          networks = {
-            wlp5s0 = {
-              ssid = "mickymaus";
-              bssid = "";
-              authentication = {
-              # TODO wpa
-              };
-              logLevel = 2;
-              settings = {
-                bridge = "br0";
-                wpa = 2;
-                wpa_key_mgmt = "WPA-PSK";
-                wpa_pairwise = "CCMP";
-              };
-            };
-          };
-        };
-      };
-    };*/
 
   services.pppd = {
     enable = true;
@@ -144,5 +107,4 @@
       };
     };
   };
-};
 }
