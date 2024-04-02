@@ -1,91 +1,109 @@
 return {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-cmdline",
-        "hrsh7th/nvim-cmp",
-        "L3MON4D3/LuaSnip",
-        "saadparwaiz1/cmp_luasnip",
-        "j-hui/fidget.nvim",
-    },
+	"neovim/nvim-lspconfig",
+	event = { "BufReadPre", "BufNewFile" },
+	dependencies = {
+		{ "williamboman/mason.nvim", config = true },
+		"williamboman/mason-lspconfig.nvim",
+		{ "j-hui/fidget.nvim", opts = {} },
+		"folke/neodev.nvim",
+		{ "b0o/schemastore.nvim" },
+		{ "hrsh7th/cmp-nvim-lsp" },
+	},
+	config = function()
+		require("mason").setup({
+			ui = {
+				border = "rounded",
+				icons = {
+					package_installed = "✓",
+					package_pending = "➜",
+					package_uninstalled = "✗",
+				},
+			},
+		})
+		require("mason-lspconfig").setup({
+			ensure_installed = vim.tbl_keys(require("matthias.lazy.lsp.servers")),
+		})
+		require("lspconfig.ui.windows").default_options.border = "single"
 
-    config = function()
-        local cmp = require('cmp')
-        local cmp_lsp = require("cmp_nvim_lsp")
-        local capabilities = vim.tbl_deep_extend(
-            "force",
-            {},
-            vim.lsp.protocol.make_client_capabilities(),
-            cmp_lsp.default_capabilities())
+		require("neodev").setup()
 
-        require("fidget").setup({})
-        require("mason").setup()
-        require("mason-lspconfig").setup({
-            ensure_installed = {
-                "lua_ls",
-                "rust_analyzer",
-                "tsserver",
-            },
-            handlers = {
-                function(server_name) -- default handler (optional)
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+			callback = function(event)
+				local map = function(keys, func, desc)
+					vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+				end
 
-                    require("lspconfig")[server_name].setup {
-                        capabilities = capabilities
-                    }
-                end,
+				map("gd", require("telescope.builtin").lsp_definitions, "Goto Definition")
+				map("gr", require("telescope.builtin").lsp_references, "Goto References")
+				map("gi", require("telescope.builtin").lsp_implementations, "Goto Implementation")
+				map("go", require("telescope.builtin").lsp_type_definitions, "Type Definition")
+				map("<leader>p", require("telescope.builtin").lsp_document_symbols, "Document Symbols")
+				map("<leader>P", require("telescope.builtin").lsp_workspace_symbols, "Workspace Symbols")
+				map("<leader>Ps", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Workspace Symbols")
 
-                ["lua_ls"] = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.lua_ls.setup {
-                        capabilities = capabilities,
-                        settings = {
-                            Lua = {
-                                diagnostics = {
-                                    globals = { "vim", "it", "describe", "before_each", "after_each" },
-                                }
-                            }
-                        }
-                    }
-                end,
-            }
-        })
+				map("gl", vim.diagnostic.open_float, "Open Diagnostic Float")
+				map("K", vim.lsp.buf.hover, "Hover Documentation")
+				map("gs", vim.lsp.buf.signature_help, "Signature Documentation")
+				map("gD", vim.lsp.buf.declaration, "Goto Declaration")
 
-        local cmp_select = { behavior = cmp.SelectBehavior.Select }
+				map("<leader>v", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", "Goto Definition in Vertical Split")
 
-        cmp.setup({
-            snippet = {
-                expand = function(args)
-                    require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-                end,
-            },
-            mapping = cmp.mapping.preset.insert({
-                ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-                ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-                ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-                ["<C-Space>"] = cmp.mapping.complete(),
-            }),
-            sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
-            }, {
-                { name = 'buffer' },
-            })
-        })
+				-- Thank you teej
+				-- https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua#L502
+				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				if client and client.server_capabilities.documentHighlightProvider then
+					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+						buffer = event.buf,
+						callback = vim.lsp.buf.document_highlight,
+					})
 
-        vim.diagnostic.config({
-            -- update_in_insert = true,
-            float = {
-                focusable = false,
-                style = "minimal",
-                border = "rounded",
-                source = "always",
-                header = "",
-                prefix = "",
-            },
-        })
-    end
+					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+						buffer = event.buf,
+						callback = vim.lsp.buf.clear_references,
+					})
+				end
+			end,
+		})
+
+		-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+		-- capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+
+		local mason_lspconfig = require("mason-lspconfig")
+
+		mason_lspconfig.setup_handlers({
+			function(server_name)
+				require("lspconfig")[server_name].setup({
+					capabilities = capabilities,
+					on_attach = require("matthias.lazy.lsp.on_attach").on_attach,
+					settings = require("matthias.lazy.lsp.servers")[server_name],
+					filetypes = (require("matthias.lazy.lsp.servers")[server_name] or {}).filetypes,
+				})
+			end,
+		})
+
+		vim.diagnostic.config({
+			title = false,
+			underline = true,
+			virtual_text = true,
+			signs = true,
+			update_in_insert = false,
+			severity_sort = true,
+			float = {
+				source = "always",
+				style = "minimal",
+				border = "rounded",
+				header = "",
+				prefix = "",
+			},
+		})
+
+		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		for type, icon in pairs(signs) do
+			local hl = "DiagnosticSign" .. type
+			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+		end
+	end,
 }
