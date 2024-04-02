@@ -27,7 +27,7 @@
       enable = true;
       internalInterfaces = [
         "br0"
-        "wguest"
+        "wlp5s0"
       ];
       externalInterface = "enp1s0";
     };
@@ -58,6 +58,8 @@
     };
   };
 
+  networking.networkmanager.enable = false;
+
   services.dnsmasq = {
     enable = true;
     servers = [ "9.9.9.9" "1.1.1.1" ];
@@ -77,6 +79,17 @@
         countryCode = "DE";
         band = "5g";
         channel = 0;
+        settings = {
+          logger_syslog = 127;
+          logger_syslog_level = 2;
+          logger_stdout = 127;
+          logger_stdout_level = 2;
+        };
+        wifi4 = {
+          enable = true;
+          capabilities = [ "HT40+" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "DSSS_CCK-40" ];
+          require = false;
+        };
         networks.wlp5s0 = {
           ssid = "Mickey Mouse";
           authentication.saePasswords = [{ password = "test"; }];
