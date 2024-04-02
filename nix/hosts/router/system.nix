@@ -4,6 +4,7 @@
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
   networking.hostName = "router";
+  networking.useDHCP = false;
   users = {
     users.matthias = {
       password = "admin";
@@ -41,7 +42,6 @@
     };
 
     interfaces = {
-      useDHCP = false;
       enp1s0.useDHCP = true;
       enp2s0.useDHCP = true;
       wlp5s0.useDHCP = true;
@@ -56,26 +56,27 @@
         ];
       };
     };
+  };
 
-    services.dnsmasq = {
-      enable = true;
-      servers = [ "9.9.9.9" "1.1.1.1" ];
-      extraConfig = ''
-        domain-needed
-        interface=br0
-        interface=wguest
-        dhcp-range=192.168.1.10,192.168.1.254,24h
-        dhcp-range=192.168.2.10,192.168.2.254,24h
-      '';
-    };
+  services.dnsmasq = {
+    enable = true;
+    servers = [ "9.9.9.9" "1.1.1.1" ];
+    extraConfig = ''
+      domain-needed
+      interface=br0
+      interface=wguest
+      dhcp-range=192.168.1.10,192.168.1.254,24h
+      dhcp-range=192.168.2.10,192.168.2.254,24h
+    '';
+  };
 
-    services.hostapd = {
-      enable = true;
-      interface = "wlp5s0";
-      hwMode = "g";
-      ssid = "mickeymouse";
-      wpaPassphrase = "secret";
-    }
+  services.hostapd = {
+    enable = true;
+    interface = "wlp5s0";
+    hwMode = "g";
+    ssid = "mickeymouse";
+    wpaPassphrase = "secret";
+  };
     /*services.hostapd = {
       enable = true;
       radios = {
@@ -114,27 +115,27 @@
       };
     };*/
 
-    services.pppd = {
-      enable = true;
-      peers = {
-        telekom = {
-          autostart = true;
-          enable = true;
-          config = ''
-            plugin rppppoe.so wan
+  services.pppd = {
+    enable = true;
+    peers = {
+      telekom = {
+        autostart = true;
+        enable = true;
+        config = ''
+          plugin rppppoe.so wan
 
-            name "002682907693551138580459#0001@t-online.de"
-            password ""
+          name "002682907693551138580459#0001@t-online.de"
+          password ""
 
-            persist
-            maxfail 0
-            holdoff 5
+          persist
+          maxfail 0
+          holdoff 5
 
-            noipdefault
-            defaultroute
-          '';
-        };
+          noipdefault
+          defaultroute
+        '';
       };
     };
   };
+};
 }

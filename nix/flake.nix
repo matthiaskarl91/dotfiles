@@ -64,19 +64,19 @@
         }).config.system.build.sdImage;
       };
       nixosConfigurations = {
-        router = nixpks.lib.nixosSystem {
+        router = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
             ./hosts/router
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.matthias = { ... }: {
-                _module.args.unstable = unstable;
-                imports = [ ./hosts/router/home.nix];
-              };
-            }
+            #home-manager.nixosModules.home-manager
+            #{
+            #  home-manager.useGlobalPkgs = true;
+            #  home-manager.useUserPackages = true;
+            #  home-manager.users.matthias = { ... }: {
+            #    _module.args.unstable = unstable;
+                #imports = [ ./hosts/router/home.nix];
+            #  };
+            #}
           ];
         };
         vmlinux = nixpkgs.lib.nixosSystem {
