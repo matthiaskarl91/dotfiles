@@ -72,10 +72,17 @@
 
   services.hostapd = {
     enable = true;
-    interface = "wlp5s0";
-    hwMode = "g";
-    ssid = "mickeymouse";
-    wpaPassphrase = "secret";
+    radios = {
+      wlp5s0 = {
+        countryCode = "DE";
+        band = "5g";
+        channel = 0;
+        networks.wlp5s0 = {
+          ssid = "Mickey Mouse";
+          authentication.saePasswords = [{ password = "test"; }];
+        };
+      };
+    };
   };
     /*services.hostapd = {
       enable = true;
