@@ -42,9 +42,18 @@ return {
 		},
 	},
 	a = {
-		function()
-			require("harpoon"):list():append()
-		end,
-		"Append file in harpoon",
+		a = {
+			function()
+				require("harpoon"):list():add()
+			end,
+			"Append file in harpoon",
+		},
+		e = {
+			function()
+				local harpoon = require("harpoon")
+				harpoon.ui:toggle_quick_menu(harpoon:list())
+			end,
+			"Open harpoon menu",
+		},
 	},
 }
