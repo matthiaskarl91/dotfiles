@@ -1,12 +1,14 @@
 { pkgs, config, lib, ... }:
 {
+  nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = with pkgs; [ vim git ];
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
   networking.hostName = "router";
   networking.useDHCP = false;
   users = {
-    users.matthias = {
+    matthias = {
       password = "admin";
       isNormalUser = true;
       extraGroups = [ "wheel" ];
@@ -78,7 +80,7 @@
       wlp5s0 = {
         countryCode = "DE";
         band = "5g";
-        channel = 0;
+        channel = 36;
         settings = {
           logger_syslog = 127;
           logger_syslog_level = 2;
@@ -86,9 +88,11 @@
           logger_stdout_level = 2;
         };
         wifi4 = {
+          enable = false;
+        };
+        wifi5 = {
           enable = true;
           capabilities = [ "HT40+" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "DSSS_CCK-40" ];
-          require = false;
         };
         networks.wlp5s0 = {
           ssid = "Mickey Mouse";
@@ -98,7 +102,7 @@
     };
   };
 
-  services.pppd = {
+  /*services.pppd = {
     enable = true;
     peers = {
       telekom = {
@@ -119,5 +123,5 @@
         '';
       };
     };
-  };
+  };*/
 }
