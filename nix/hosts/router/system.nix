@@ -2,7 +2,11 @@
 {
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [ vim git ];
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    iperf
+  ];
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
   networking.hostName = "router";
@@ -25,6 +29,19 @@
   };
 
   networking = {
+    firewall = {
+      enable = true;
+      trustedInterfaces = [ "br0" ];
+      interfaces = {
+        enp1s0 = {
+          allowedTCPPorts = [ ];
+          allowedUDPPorts = [
+            #Wireguard
+            666
+          ];
+        };
+      };
+    };
     nat = {
       enable = true;
       internalInterfaces = [
@@ -57,15 +74,6 @@
           }
         ];
       };
-      wlp5s0 = {
-        useDHCP = true;
-        ipv4.addresses = [
-          {
-            address = "192.168.2.1";
-            prefixLength = 24;
-          }
-        ];
-      };
     };
   };
 
@@ -74,7 +82,7 @@
   services.dnsmasq = {
     enable = true;
     settings = {
-      servers = [ "9.9.9.9" "1.1.1.1" ];
+      server = [ "9.9.9.9" "1.1.1.1" ];
       domain-needed = true;
       interface = [ "br0" "wlp5s0" ];
       dhcp-range = [
@@ -98,11 +106,11 @@
           logger_stdout_level = 2;
         };
         wifi4 = {
-          enable = false;
+          enable = true;
+          capabilities = [ "HT40" ];
         };
         wifi5 = {
-          enable = true;
-          capabilities = [ "HT40+" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "DSSS_CCK-40" ];
+          enable = false;
         };
         networks.wlp5s0 = {
           ssid = "Mickey Mouse";
