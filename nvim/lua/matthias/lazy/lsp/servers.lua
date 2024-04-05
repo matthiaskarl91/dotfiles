@@ -41,24 +41,7 @@ return {
 	vimls = {
 		filetypes = { "vim" },
 	},
-	tsserver = {
-		--init_options = {
-		--		plugins = {
-		--			{
-		--				name = "@vue/typescript-plugin",
-		--				location = require("mason-registry").get_package("vue-language-server"):get_install_path()
-		--					.. "/node_modules/@vue/language-server",
-		--				languages = { "vue" },
-		--			},
-		--		},
-		--	},
-		-- filetypes = {
-		--	"javascript",
-		--	"typescript",
-		--	"javascriptreact",
-		--	"typescriptreact",
-		--},
-	},
+	tsserver = {},
 	gopls = {},
 	pyright = {},
 	-- golangci_lint_ls = {},
@@ -66,10 +49,7 @@ return {
 		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 		init_options = {
 			vue = {
-				hybridMode = true,
-			},
-			typescript = {
-				tsdk = vim.fn.getcwd() .. "node_modules/typescript",
+				hybridMode = false,
 			},
 		},
 	},
