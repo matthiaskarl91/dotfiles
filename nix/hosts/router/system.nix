@@ -57,6 +57,15 @@
           }
         ];
       };
+      wlp5s0 = {
+        useDHCP = true;
+        ipv4.addresses = [
+          {
+            address = "192.168.2.1";
+            prefixLength = 24;
+          }
+        ];
+      };
     };
   };
 
@@ -64,14 +73,15 @@
 
   services.dnsmasq = {
     enable = true;
-    servers = [ "9.9.9.9" "1.1.1.1" ];
-    extraConfig = ''
-      domain-needed
-      interface=br0
-      interface=wguest
-      dhcp-range=192.168.1.10,192.168.1.254,24h
-      dhcp-range=192.168.2.10,192.168.2.254,24h
-    '';
+    settings = {
+      servers = [ "9.9.9.9" "1.1.1.1" ];
+      domain-needed = true;
+      interface = [ "br0" "wlp5s0" ];
+      dhcp-range = [
+        "192.168.1.10,192.168.1.254,24h"
+        "192.168.2.10,192.168.2.254,24h"
+      ];
+    };
   };
 
   services.hostapd = {
@@ -79,8 +89,8 @@
     radios = {
       wlp5s0 = {
         countryCode = "DE";
-        band = "5g";
-        channel = 36;
+        band = "2g";
+        channel = 10;
         settings = {
           logger_syslog = 127;
           logger_syslog_level = 2;
@@ -96,7 +106,7 @@
         };
         networks.wlp5s0 = {
           ssid = "Mickey Mouse";
-          authentication.saePasswords = [{ password = "test"; }];
+          authentication.saePasswords = [{ password = "12345678901234567890"; }];
         };
       };
     };
