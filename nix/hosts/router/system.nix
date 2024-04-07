@@ -1,5 +1,8 @@
 { pkgs, config, lib, ... }:
 {
+  imports = [
+    ../../sys/monitoring.nix
+  ];
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
