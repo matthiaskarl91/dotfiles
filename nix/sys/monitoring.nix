@@ -21,6 +21,7 @@
       snmp = {
         enable = true;
         port = 9003;
+        configFile = "/etc/prometheus/snmp.yml";
       };
     };
     scrapeConfigs = [
