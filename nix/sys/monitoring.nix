@@ -1,4 +1,5 @@
 { config, pkgs, ... }: {
+
   services.grafana = {
     enable = true;
     domain = "grafana.karl";
