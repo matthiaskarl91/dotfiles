@@ -121,7 +121,11 @@
         };
         networks.wlp5s0 = {
           ssid = "Mickey Mouse";
-          authentication.saePasswords = [{ password = "12345678901234567890"; }];
+          authentication = {
+            mode = "wpa3-sae";
+            wpaPassword = "12345678901234567890";
+            saePasswords = [{ password = "12345678901234567890"; }];
+          };
         };
       };
     };
