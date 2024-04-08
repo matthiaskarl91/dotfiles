@@ -19,9 +19,11 @@
   networking.useDHCP = false;
   users = {
     matthias = {
-      password = "admin";
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
+      matthias = {
+        password = "admin";
+        isNormalUser = true;
+        extraGroups = [ "wheel" ];
+      };
     };
   };
 
