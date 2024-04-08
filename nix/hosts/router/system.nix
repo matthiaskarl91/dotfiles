@@ -17,15 +17,15 @@
 
   networking.hostName = "router";
   networking.useDHCP = false;
-  users = {
-    matthias = {
-      matthias = {
-        password = "admin";
-        isNormalUser = true;
-        extraGroups = [ "wheel" ];
-      };
-    };
-  };
+  #users = {
+  #  matthias = {
+  #    matthias = {
+  #      password = "admin";
+  #      isNormalUser = true;
+  #      extraGroups = [ "wheel" ];
+  #    };
+  #  };
+  #};
 
   boot = {
     kernel = {
