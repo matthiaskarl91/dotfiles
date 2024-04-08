@@ -10,8 +10,10 @@
     git
     iperf
   ];
+
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
+
   networking.hostName = "router";
   networking.useDHCP = false;
   users = {
