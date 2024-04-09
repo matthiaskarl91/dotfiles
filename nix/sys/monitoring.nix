@@ -18,23 +18,12 @@
         enabledCollectors = [ "systemd" ];
         port = 9002;
       };
-      snmp = {
-        enable = true;
-        port = 9003;
-        configurationPath = "/etc/prometheus/snmp.yml";
-      };
     };
     scrapeConfigs = [
       {
         job_name = "router-node";
         static_configs = [{
           targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
-        }];
-      }
-      {
-        job_name = "router-snmp";
-        static_configs = [{
-          targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.snmp.port}" ];
         }];
       }
     ];
