@@ -18,7 +18,7 @@
     services.openssh.openFirewall = false;
 
     system.stateVersion = "23.11";
-  }
+  };
 
 
   #users = {
