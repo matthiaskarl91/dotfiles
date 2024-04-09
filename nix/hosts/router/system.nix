@@ -15,7 +15,7 @@
     monitoring.enable = true;
   };
 
-  config.age.secrets.wifiPassword.file = ../../secrets/wifiPasswordFile.age;
+  age.secrets.wifiPassword.file = ../../secrets/wifiPasswordFile.age;
 
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
