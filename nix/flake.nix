@@ -13,6 +13,7 @@
 
   outputs = { self, nix-darwin, nixpkgs, home-manager, nixos-hardware, agenix }@inputs:
     let
+      matthias = { inherit nixpkgs; };
       inherit (nix-darwin.lib) darwinSystem;
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages."${system}";
@@ -80,7 +81,7 @@
             #  home-manager.useUserPackages = true;
             #  home-manager.users.matthias = { ... }: {
             #    _module.args.unstable = unstable;
-                #imports = [ ./hosts/router/home.nix];
+            #imports = [ ./hosts/router/home.nix];
             #  };
             #}
           ];
