@@ -72,6 +72,9 @@
       nixosConfigurations = {
         router = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs = {
+            inherit agenix;
+          };
           modules = [
             ./configuration.nix
             ./hosts/router
