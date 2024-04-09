@@ -134,8 +134,8 @@ in
             ssid = "Mickey Mouse";
             authentication = {
               mode = "wpa3-sae-transition";
-              wpaPasswordFile = config.age.secrets.wifiPassword.path;
-              saePasswordsFile = config.age.secrets.wifiPassword.path;
+              wpaPasswordFile = config.age.secrets.wifi_pw.path;
+              saePasswordsFile = config.age.secrets.wifi_pw.path;
             };
           };
         };
