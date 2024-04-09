@@ -8,9 +8,10 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+    agenix.url = "github:ryantm/agenix";
   };
 
-  outputs = { self, nix-darwin, nixpkgs, home-manager, nixos-hardware }@inputs:
+  outputs = { self, nix-darwin, nixpkgs, home-manager, nixos-hardware, agenix }@inputs:
     let
       inherit (nix-darwin.lib) darwinSystem;
       system = "aarch64-darwin";
@@ -32,6 +33,7 @@
         #you can have multiple darwinConfigurations per flake, one per hostname
         inherit system;
         modules = [
+          agenix.nixosModules.default
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix
           ./home/darwin/skhd.nix

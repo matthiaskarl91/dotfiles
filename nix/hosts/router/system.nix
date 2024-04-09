@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 {
   imports = [
-    ../../sys/monitoring.nix
+    ../../sys
   ];
   nixpkgs.config.allowUnfree = true;
 
@@ -10,6 +10,10 @@
     git
     iperf
   ];
+
+  matthias = {
+    monitoring.enable = true;
+  };
 
   services.openssh.enable = true;
   services.openssh.openFirewall = false;

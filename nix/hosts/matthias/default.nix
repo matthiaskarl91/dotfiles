@@ -1,6 +1,10 @@
 # hosts/YourHostName/default.nix
 { pkgs, config, ... }:
 {
+  imports = [
+    ../../sys
+  ];
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.trustedUsers = [ "root" "matthiaskarl" ];
 
@@ -8,7 +12,8 @@
   services.nix-daemon.enable = true;
   programs.zsh.enable = true;
 
-  system.defaults.dock.autohide = true;
+  system.defaults.dock.autohide = false;
+
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.users.matthiaskarl = { pkgs, lib, ... }: {
