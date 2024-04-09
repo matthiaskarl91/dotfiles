@@ -141,6 +141,28 @@ in
         };
       };
     };
+    services.pppd = {
+      enable = true;
+      peers = {
+        telekom = {
+          autostart = true;
+          enable = true;
+          config = ''
+            plugin rppppoe.so wan
+
+            name "002249170648551138580459#0001@t-online.de"
+            password "70108941"
+
+            persist
+            maxfail 0
+            holdoff 5
+
+            noipdefault
+            defaultroute
+          '';
+        };
+      };
+    };
 
   };
 }
