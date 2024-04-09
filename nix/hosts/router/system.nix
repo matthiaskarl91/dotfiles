@@ -4,7 +4,7 @@
     ../../sys
   ];
   nixpkgs.config.allowUnfree = true;
-  matthias = {
+  config.matthias = {
     monitoring.enable = true;
 
     router = {
