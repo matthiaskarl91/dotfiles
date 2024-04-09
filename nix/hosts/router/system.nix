@@ -10,14 +10,13 @@
       enable = true;
       privateSubnet = "10.77.77";
     };
-    nixpkgs.config.allowUnfree = true;
-
 
     services.openssh.enable = true;
     services.openssh.openFirewall = false;
 
     system.stateVersion = "23.11";
   };
+  nixpkgs.config.allowUnfree = true;
 
 
   #users = {
