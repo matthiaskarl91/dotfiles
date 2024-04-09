@@ -164,6 +164,7 @@ return {
 						}),
 					},
 					frecency = {
+						db_safe_mode = false,
 						default_workspace = "CWD",
 						show_scores = true,
 						show_unindexed = true,
