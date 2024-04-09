@@ -33,11 +33,14 @@
         #you can have multiple darwinConfigurations per flake, one per hostname
         inherit system;
         modules = [
-          agenix.nixosModules.default
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix
           ./home/darwin/skhd.nix
           ./home/darwin/yabai.nix
+          agenix.nixosModules.default
+          {
+            environment.systemPackages = [ agenix.packages.${system}.default ];
+          }
         ];
         /*{
           nix.distributedBuilds = true;

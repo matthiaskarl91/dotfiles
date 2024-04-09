@@ -15,6 +15,8 @@
     monitoring.enable = true;
   };
 
+  config.age.secrets.wifiPassword.file = ../../secrets/wifiPasswordFile.age;
+
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
 
@@ -126,9 +128,9 @@
         networks.wlp5s0 = {
           ssid = "Mickey Mouse";
           authentication = {
-            mode = "wpa3-sae";
-            wpaPassword = "12345678901234567890";
-            saePasswords = [{ password = "12345678901234567890"; }];
+            mode = "wpa3-sae-transition";
+            wpaPasswordFile = config.age.secrets.wifiPassword.path;
+            saePasswordsFile = config.age.secrets.wifiPassword.path;
           };
         };
       };

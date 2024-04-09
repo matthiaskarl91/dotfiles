@@ -1,10 +1,6 @@
 # hosts/YourHostName/default.nix
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 {
-  imports = [
-    ../../sys
-  ];
-
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.trustedUsers = [ "root" "matthiaskarl" ];
 
