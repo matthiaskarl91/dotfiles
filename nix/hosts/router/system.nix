@@ -4,13 +4,6 @@
     ../../sys
   ];
   nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    iperf
-  ];
-
   matthias = {
     monitoring.enable = true;
 
@@ -19,6 +12,13 @@
       privateSubnet = "10.77.77";
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    iperf
+  ];
+
 
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
