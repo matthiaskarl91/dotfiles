@@ -2,6 +2,7 @@
 {
   imports = [
     ./monitoring.nix
+    ./router.nix
   ];
 
   config.time.timeZone = "Europe/Berlin";
