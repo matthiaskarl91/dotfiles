@@ -3,6 +3,13 @@
   imports = [
     ../../sys
   ];
+  config.matthias = {
+    monitoring.enable = true;
+
+    router = {
+      enable = true;
+      privateSubnet = "10.77.77";
+    };
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
@@ -14,16 +21,9 @@
   services.openssh.enable = true;
   services.openssh.openFirewall = false;
 
-  config.matthias = {
-    monitoring.enable = true;
-
-    router = {
-      enable = true;
-      privateSubnet = "10.77.77";
-    };
+  system.stateVersion = "23.11";
   };
 
-  system.stateVersion = "23.11";
 
   #users = {
   #  matthias = {
