@@ -8,7 +8,7 @@
 
     router = {
       enable = true;
-      privateSubnet = "10.77.77";
+      privateSubnet = "192.168.1";
     };
 
   };
