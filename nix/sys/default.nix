@@ -11,5 +11,7 @@
     git
     htop
     agenix.packages.${pkgs.system}.default
+    vim
+    iperf
   ];
 }

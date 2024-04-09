@@ -10,18 +10,13 @@
       enable = true;
       privateSubnet = "10.77.77";
     };
-  nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    iperf
-  ];
 
-  services.openssh.enable = true;
-  services.openssh.openFirewall = false;
+    services.openssh.enable = true;
+    services.openssh.openFirewall = false;
 
-  system.stateVersion = "23.11";
+    system.stateVersion = "23.11";
   };
 
 
@@ -38,23 +33,23 @@
   /*services.pppd = {
     enable = true;
     peers = {
-      telekom = {
-        autostart = true;
-        enable = true;
-        config = ''
-          plugin rppppoe.so wan
+    telekom = {
+    autostart = true;
+    enable = true;
+    config = ''
+    plugin rppppoe.so wan
 
-          name "002682907693551138580459#0001@t-online.de"
-          password ""
+    name "002682907693551138580459#0001@t-online.de"
+    password ""
 
-          persist
-          maxfail 0
-          holdoff 5
+    persist
+    maxfail 0
+    holdoff 5
 
-          noipdefault
-          defaultroute
-        '';
-      };
+    noipdefault
+    defaultroute
+    '';
     };
-  };*/
+    };
+    };*/
 }
