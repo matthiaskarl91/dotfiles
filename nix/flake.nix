@@ -78,6 +78,7 @@
           modules = [
             ./configuration.nix
             ./hosts/router
+            agenix.nixosModules.age
             #home-manager.nixosModules.home-manager
             #{
             #  home-manager.useGlobalPkgs = true;
