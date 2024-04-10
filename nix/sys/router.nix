@@ -136,6 +136,19 @@ in
               mode = "wpa3-sae-transition";
               wpaPasswordFile = config.age.secrets.wifi_pw.path;
               saePasswordsFile = config.age.secrets.wifi_pw.path;
+              pairwiseCiphers = [
+                "CCMP"
+              ];
+              enableRecommendedPairwiseCiphers = true;
+            };
+            logLevel = 2;
+            apIsolate = true;
+            settings = {
+              bridge = "br0";
+
+              wpa = 2;
+              wpa_key_mgmt = "WPA-PSK";
+              wpa_pairwise = "CCMP";
             };
           };
         };
