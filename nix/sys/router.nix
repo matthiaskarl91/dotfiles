@@ -47,6 +47,12 @@ in
     networking.useDHCP = false;
 
     networking = {
+      vlans = {
+        wan = {
+          id = 10;
+          interface = "enp1s0";
+        };
+      };
       firewall = {
         enable = true;
         trustedInterfaces = [ "br0" ];
@@ -79,9 +85,10 @@ in
       };
 
       interfaces = {
-        enp1s0.useDHCP = true;
-        enp2s0.useDHCP = true;
+        enp1s0.useDHCP = false;
+        enp2s0.useDHCP = false;
         wlp5s0.useDHCP = true;
+        wan.useDHCP = true;
 
         br0 = {
           useDHCP = false;
