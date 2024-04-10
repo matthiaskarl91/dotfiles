@@ -143,13 +143,6 @@ in
             };
             logLevel = 2;
             apIsolate = true;
-            settings = {
-              bridge = "br0";
-
-              wpa = 2;
-              wpa_key_mgmt = "WPA-PSK";
-              wpa_pairwise = "CCMP";
-            };
           };
         };
       };
