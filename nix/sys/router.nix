@@ -50,7 +50,7 @@ in
       vlans = {
         wan = {
           id = 10;
-          interface = "enp1s0";
+          interface = "enp2s0";
         };
       };
       firewall = {
@@ -85,8 +85,10 @@ in
       };
 
       interfaces = {
-        enp1s0.useDHCP = false;
+        enp1s0.useDHCP = true;
         enp2s0.useDHCP = false;
+        enp3s0.useDHCP = false;
+        enp4s0.useDHCP = false;
         wlp5s0.useDHCP = true;
         wan.useDHCP = true;
 
