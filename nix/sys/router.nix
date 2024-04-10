@@ -57,7 +57,7 @@ in
         enable = true;
         trustedInterfaces = [ "br0" ];
         interfaces = {
-          enp1s0 = {
+          wan = {
             allowedTCPPorts = [ ];
             allowedUDPPorts = [
               #Wireguard
@@ -72,7 +72,7 @@ in
           "br0"
           "wlp5s0"
         ];
-        externalInterface = "enp1s0";
+        externalInterface = "wan";
       };
 
       bridges = {
