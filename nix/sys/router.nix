@@ -153,7 +153,7 @@ in
           autostart = true;
           enable = true;
           config = ''
-            plugin rp-pppoe.so enp2s0
+            plugin pppoe.so enp2s0
 
             name "002249170648551138580459#0001@t-online.de"
             password "70108941"
