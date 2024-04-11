@@ -139,10 +139,6 @@ in
               mode = "wpa3-sae-transition";
               wpaPasswordFile = config.age.secrets.wifi_pw.path;
               saePasswordsFile = config.age.secrets.wifi_pw.path;
-              pairwiseCiphers = [
-                "CCMP"
-              ];
-              enableRecommendedPairwiseCiphers = true;
             };
             logLevel = 2;
             apIsolate = true;
@@ -157,7 +153,7 @@ in
           autostart = true;
           enable = true;
           config = ''
-            plugin rppppoe.so wan
+            plugin rp-pppoe.so enp2s0
 
             name "002249170648551138580459#0001@t-online.de"
             password "70108941"
