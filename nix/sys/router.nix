@@ -47,17 +47,12 @@ in
     networking.useDHCP = false;
 
     networking = {
-      vlans = {
-        wan = {
-          id = 10;
-          interface = "enp2s0";
-        };
-      };
+      nameservers = [ "1.1.1.1" "8.8.8.8" ];
       firewall = {
         enable = true;
         trustedInterfaces = [ "br0" ];
         interfaces = {
-          wan = {
+          enp1s0 = {
             allowedTCPPorts = [ ];
             allowedUDPPorts = [
               #Wireguard
@@ -72,7 +67,7 @@ in
           "br0"
           "wlp5s0"
         ];
-        externalInterface = "wan";
+        externalInterface = "enp1s0";
       };
 
       bridges = {
@@ -89,8 +84,7 @@ in
         enp2s0.useDHCP = false;
         enp3s0.useDHCP = false;
         enp4s0.useDHCP = false;
-        wlp5s0.useDHCP = true;
-        wan.useDHCP = true;
+        wlp5s0.useDHCP = false;
 
         br0 = {
           useDHCP = false;
