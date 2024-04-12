@@ -10,7 +10,7 @@
       enable = true;
       privateSubnet = "192.168.1";
       hosts = {
-        "router" = {
+        "00:0d:b9:63:0c:99" = {
           ip = "192.168.1.1";
           name = "router";
         };
