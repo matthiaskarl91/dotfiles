@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   cfg = config.matthias.router;
+  formatHostName = key: value: "${value.ip} ${value.name}";
   inherit (lib) mapAttrs' genAttrs nameValuePair mkOption types mkIf mkEnableOption;
 in
 {
@@ -106,12 +107,17 @@ in
         server = [ "9.9.9.9" "1.1.1.1" ];
         domain-needed = true;
         interface = [ "br0" "wlp5s0" ];
+        domain = "home";
         dhcp-range = [
           "192.168.1.10,192.168.1.254,24h"
           "192.168.2.10,192.168.2.254,24h"
         ];
       };
     };
+
+    # Define host names to make dnsmasq resolve them, e.g. http://router.home
+    networking.extraHosts =
+      lib.concatStringsSep "\n" (lib.mapAttrsToList formatHostName cfg.hosts);
 
     services.hostapd = {
       enable = true;
