@@ -100,123 +100,123 @@ in
             allowedUDPPorts = allowedUdpPorts;
           };
         };
-        };
-        nat = {
-          enable = true;
-          internalInterfaces = [
-            "br0"
+      };
+      nat = {
+        enable = true;
+        internalInterfaces = [
+          "br0"
+          "wlp5s0"
+        ];
+        externalInterface = "enp1s0";
+      };
+
+      bridges = {
+        br0 = {
+          interfaces = [
+            "enp2s0"
             "wlp5s0"
           ];
-          externalInterface = "enp1s0";
-        };
-
-        bridges = {
-          br0 = {
-            interfaces = [
-              "enp2s0"
-              "wlp5s0"
-            ];
-          };
-        };
-
-        interfaces = {
-          enp1s0.useDHCP = true;
-          enp2s0.useDHCP = false;
-          enp3s0.useDHCP = false;
-          enp4s0.useDHCP = false;
-          wlp5s0.useDHCP = false;
-
-          br0 = {
-            useDHCP = false;
-            ipv4.addresses = [
-              {
-                address = "${cfg.privateSubnet}.1";
-                prefixLength = 24;
-              }
-            ];
-          };
         };
       };
 
-      networking.networkmanager.enable = false;
+      interfaces = {
+        enp1s0.useDHCP = true;
+        enp2s0.useDHCP = false;
+        enp3s0.useDHCP = false;
+        enp4s0.useDHCP = false;
+        wlp5s0.useDHCP = false;
 
-      services.dnsmasq = {
-        enable = true;
-        settings = {
-          server = [ "8.8.8.8" "9.9.9.9" "1.1.1.1" ];
-          domain-needed = true;
-          bogus-priv = true;
-          no-resolv = true;
-          interface = [ "br0" "wlp5s0" ];
-          expand-hosts = true;
-          local = "/home/";
-          domain = "home";
-          dhcp-range = [
-            "192.168.1.10,192.168.1.254,24h"
-            "192.168.2.10,192.168.2.254,24h"
+        br0 = {
+          useDHCP = false;
+          ipv4.addresses = [
+            {
+              address = "${cfg.privateSubnet}.1";
+              prefixLength = 24;
+            }
           ];
         };
       };
-
-      # Define host names to make dnsmasq resolve them, e.g. http://router.home
-      networking.extraHosts =
-        lib.concatStringsSep "\n" (lib.mapAttrsToList formatHostName cfg.hosts);
-
-      services.hostapd = {
-        enable = true;
-        radios = {
-          wlp5s0 = {
-            countryCode = "DE";
-            band = "2g";
-            channel = 10;
-            settings = {
-              logger_syslog = 127;
-              logger_syslog_level = 2;
-              logger_stdout = 127;
-              logger_stdout_level = 2;
-            };
-            wifi4 = {
-              enable = true;
-              capabilities = [ "HT40" ];
-            };
-            wifi5 = {
-              enable = false;
-            };
-            networks.wlp5s0 = {
-              ssid = "Mickey Mouse";
-              authentication = {
-                mode = "wpa3-sae-transition";
-                wpaPasswordFile = config.age.secrets.wifi_pw.path;
-                saePasswordsFile = config.age.secrets.wifi_pw.path;
-              };
-              logLevel = 2;
-              apIsolate = true;
-            };
-          };
-        };
-      };
-      services.pppd = {
-        enable = true;
-        peers = {
-          telekom = {
-            autostart = true;
-            enable = true;
-            config = ''
-              plugin pppoe.so enp2s0
-
-              name "002249170648551138580459#0001@t-online.de"
-              password "70108941"
-
-              persist
-              maxfail 0
-              holdoff 5
-
-              noipdefault
-              defaultroute
-            '';
-          };
-        };
-      };
-
     };
-  }
+
+    networking.networkmanager.enable = false;
+
+    services.dnsmasq = {
+      enable = true;
+      settings = {
+        server = [ "8.8.8.8" "9.9.9.9" "1.1.1.1" ];
+        domain-needed = true;
+        bogus-priv = true;
+        no-resolv = true;
+        interface = [ "br0" "wlp5s0" ];
+        expand-hosts = true;
+        local = "/home/";
+        domain = "home";
+        dhcp-range = [
+          "192.168.1.10,192.168.1.254,24h"
+          "192.168.2.10,192.168.2.254,24h"
+        ];
+      };
+    };
+
+    # Define host names to make dnsmasq resolve them, e.g. http://router.home
+    networking.extraHosts =
+      lib.concatStringsSep "\n" (lib.mapAttrsToList formatHostName cfg.hosts);
+
+    services.hostapd = {
+      enable = true;
+      radios = {
+        wlp5s0 = {
+          countryCode = "DE";
+          band = "2g";
+          channel = 10;
+          settings = {
+            logger_syslog = 127;
+            logger_syslog_level = 2;
+            logger_stdout = 127;
+            logger_stdout_level = 2;
+          };
+          wifi4 = {
+            enable = true;
+            capabilities = [ "HT40" ];
+          };
+          wifi5 = {
+            enable = false;
+          };
+          networks.wlp5s0 = {
+            ssid = "Mickey Mouse";
+            authentication = {
+              mode = "wpa3-sae-transition";
+              wpaPasswordFile = config.age.secrets.wifi_pw.path;
+              saePasswordsFile = config.age.secrets.wifi_pw.path;
+            };
+            logLevel = 2;
+            apIsolate = true;
+          };
+        };
+      };
+    };
+    services.pppd = {
+      enable = true;
+      peers = {
+        telekom = {
+          autostart = true;
+          enable = true;
+          config = ''
+            plugin pppoe.so enp1s0
+
+            name "002249170648551138580459#0001@t-online.de"
+            password "70108941"
+
+            persist
+            maxfail 0
+            holdoff 5
+
+            noipdefault
+            defaultroute
+          '';
+        };
+      };
+    };
+
+  };
+}
