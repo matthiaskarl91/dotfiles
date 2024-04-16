@@ -198,6 +198,10 @@ in
             logLevel = 2;
             apIsolate = true;
           };
+          settings = {
+            country_code = "DE";
+            ieee80211d = false;
+          };
         };
       };
     };
