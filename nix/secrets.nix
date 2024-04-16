@@ -6,5 +6,5 @@ let
 in
 {
   "secrets/wifiPasswordFile.age".publicKeys = users ++ hosts;
-
+  "secrets/wifiPskFile.age".publicKeys = users ++ hosts;
 }

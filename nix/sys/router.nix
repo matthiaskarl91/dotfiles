@@ -78,6 +78,12 @@ in
       group = "root";
       mode = "400";
     };
+    age.secrets.wifi_psk = {
+      file = ../secrets/wifiPskFile.age;
+      owner = "root";
+      group = "root";
+      mode = "400";
+    };
 
     networking.hostName = "router";
     networking.useDHCP = false;
@@ -186,7 +192,7 @@ in
             ssid = "Mickey Mouse";
             authentication = {
               mode = "wpa3-sae-transition";
-              wpaPasswordFile = config.age.secrets.wifi_pw.path;
+              wpaPskFile = config.age.secrets.wifi_psk.path;
               saePasswordsFile = config.age.secrets.wifi_pw.path;
             };
             logLevel = 2;
