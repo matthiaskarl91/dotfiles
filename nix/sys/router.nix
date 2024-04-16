@@ -183,7 +183,7 @@ in
           };
           wifi4 = {
             enable = true;
-            capabilities = [ "HT40" ];
+            #capabilities = [ "HT40" ];
           };
           wifi5 = {
             enable = false;
