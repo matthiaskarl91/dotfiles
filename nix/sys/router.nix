@@ -3,6 +3,40 @@ let
   cfg = config.matthias.router;
   formatDhcpHost = key: value: "dhcp-host=${key},${value.ip}";
   formatHostName = key: value: "${value.ip} ${value.name}";
+
+  allowedUdpPorts = [
+    # https://serverfault.com/a/424226
+    # DNS
+    53
+    # DHCP
+    67
+    68
+    # NTP
+    123
+    # Wireguard
+    666
+  ];
+  allowedTcpPorts = [
+    # https://serverfault.com/a/424226
+    # SSH
+    22
+    # DNS
+    53
+    # HTTP(S)
+    80
+    443
+    110
+    # Email (pop3, pop3s)
+    995
+    114
+    # Email (imap, imaps)
+    993
+    # Email (SMTP Submission RFC 6409)
+    587
+    # Git
+    2222
+  ];
+
   inherit (lib) mapAttrs' genAttrs nameValuePair mkOption types mkIf mkEnableOption;
 in
 {
@@ -55,130 +89,134 @@ in
         trustedInterfaces = [ "br0" ];
         interfaces = {
           enp1s0 = {
-            allowedTCPPorts = [ ];
+            allowedTCPPorts = [ 80 443 ];
             allowedUDPPorts = [
               #Wireguard
               666
             ];
           };
+          wlp5s0 = {
+            allowedTCPPorts = allowedTcpPorts;
+            allowedUDPPorts = allowedUdpPorts;
+          };
         };
-      };
-      nat = {
-        enable = true;
-        internalInterfaces = [
-          "br0"
-          "wlp5s0"
-        ];
-        externalInterface = "enp1s0";
-      };
-
-      bridges = {
-        br0 = {
-          interfaces = [
-            "enp2s0"
+        };
+        nat = {
+          enable = true;
+          internalInterfaces = [
+            "br0"
             "wlp5s0"
           ];
+          externalInterface = "enp1s0";
+        };
+
+        bridges = {
+          br0 = {
+            interfaces = [
+              "enp2s0"
+              "wlp5s0"
+            ];
+          };
+        };
+
+        interfaces = {
+          enp1s0.useDHCP = true;
+          enp2s0.useDHCP = false;
+          enp3s0.useDHCP = false;
+          enp4s0.useDHCP = false;
+          wlp5s0.useDHCP = false;
+
+          br0 = {
+            useDHCP = false;
+            ipv4.addresses = [
+              {
+                address = "${cfg.privateSubnet}.1";
+                prefixLength = 24;
+              }
+            ];
+          };
         };
       };
 
-      interfaces = {
-        enp1s0.useDHCP = true;
-        enp2s0.useDHCP = false;
-        enp3s0.useDHCP = false;
-        enp4s0.useDHCP = false;
-        wlp5s0.useDHCP = false;
+      networking.networkmanager.enable = false;
 
-        br0 = {
-          useDHCP = false;
-          ipv4.addresses = [
-            {
-              address = "${cfg.privateSubnet}.1";
-              prefixLength = 24;
-            }
+      services.dnsmasq = {
+        enable = true;
+        settings = {
+          server = [ "8.8.8.8" "9.9.9.9" "1.1.1.1" ];
+          domain-needed = true;
+          bogus-priv = true;
+          no-resolv = true;
+          interface = [ "br0" "wlp5s0" ];
+          expand-hosts = true;
+          local = "/home/";
+          domain = "home";
+          dhcp-range = [
+            "192.168.1.10,192.168.1.254,24h"
+            "192.168.2.10,192.168.2.254,24h"
           ];
         };
       };
-    };
 
-    networking.networkmanager.enable = false;
+      # Define host names to make dnsmasq resolve them, e.g. http://router.home
+      networking.extraHosts =
+        lib.concatStringsSep "\n" (lib.mapAttrsToList formatHostName cfg.hosts);
 
-    services.dnsmasq = {
-      enable = true;
-      settings = {
-        server = [ "8.8.8.8" "9.9.9.9" "1.1.1.1" ];
-        domain-needed = true;
-        bogus-priv = true;
-        no-resolv = true;
-        interface = [ "br0" "wlp5s0" ];
-        expand-hosts = true;
-        local = "/home/";
-        domain = "home";
-        dhcp-range = [
-          "192.168.1.10,192.168.1.254,24h"
-          "192.168.2.10,192.168.2.254,24h"
-        ];
-      };
-    };
-
-    # Define host names to make dnsmasq resolve them, e.g. http://router.home
-    networking.extraHosts =
-      lib.concatStringsSep "\n" (lib.mapAttrsToList formatHostName cfg.hosts);
-
-    services.hostapd = {
-      enable = true;
-      radios = {
-        wlp5s0 = {
-          countryCode = "DE";
-          band = "2g";
-          channel = 10;
-          settings = {
-            logger_syslog = 127;
-            logger_syslog_level = 2;
-            logger_stdout = 127;
-            logger_stdout_level = 2;
-          };
-          wifi4 = {
-            enable = true;
-            capabilities = [ "HT40" ];
-          };
-          wifi5 = {
-            enable = false;
-          };
-          networks.wlp5s0 = {
-            ssid = "Mickey Mouse";
-            authentication = {
-              mode = "wpa3-sae-transition";
-              wpaPasswordFile = config.age.secrets.wifi_pw.path;
-              saePasswordsFile = config.age.secrets.wifi_pw.path;
+      services.hostapd = {
+        enable = true;
+        radios = {
+          wlp5s0 = {
+            countryCode = "DE";
+            band = "2g";
+            channel = 10;
+            settings = {
+              logger_syslog = 127;
+              logger_syslog_level = 2;
+              logger_stdout = 127;
+              logger_stdout_level = 2;
             };
-            logLevel = 2;
-            apIsolate = true;
+            wifi4 = {
+              enable = true;
+              capabilities = [ "HT40" ];
+            };
+            wifi5 = {
+              enable = false;
+            };
+            networks.wlp5s0 = {
+              ssid = "Mickey Mouse";
+              authentication = {
+                mode = "wpa3-sae-transition";
+                wpaPasswordFile = config.age.secrets.wifi_pw.path;
+                saePasswordsFile = config.age.secrets.wifi_pw.path;
+              };
+              logLevel = 2;
+              apIsolate = true;
+            };
           };
         };
       };
-    };
-    services.pppd = {
-      enable = true;
-      peers = {
-        telekom = {
-          autostart = true;
-          enable = true;
-          config = ''
-            plugin pppoe.so enp2s0
+      services.pppd = {
+        enable = true;
+        peers = {
+          telekom = {
+            autostart = true;
+            enable = true;
+            config = ''
+              plugin pppoe.so enp2s0
 
-            name "002249170648551138580459#0001@t-online.de"
-            password "70108941"
+              name "002249170648551138580459#0001@t-online.de"
+              password "70108941"
 
-            persist
-            maxfail 0
-            holdoff 5
+              persist
+              maxfail 0
+              holdoff 5
 
-            noipdefault
-            defaultroute
-          '';
+              noipdefault
+              defaultroute
+            '';
+          };
         };
       };
-    };
 
-  };
-}
+    };
+  }
