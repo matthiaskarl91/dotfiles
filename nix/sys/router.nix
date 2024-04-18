@@ -200,7 +200,7 @@ in
           };
           settings = {
             country_code = "DE";
-            ieee80211d = false;
+            ieee80211d = mkForce true;
           };
         };
       };
