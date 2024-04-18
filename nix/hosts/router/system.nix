@@ -17,6 +17,9 @@
       };
     };
 
+    home-automation = {
+      enable = true;
+    };
   };
   config = {
     nixpkgs.config.allowUnfree = true;
