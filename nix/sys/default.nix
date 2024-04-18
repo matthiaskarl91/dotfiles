@@ -1,6 +1,7 @@
-{ config, pkgs, agenix, ...}:
+{ config, pkgs, agenix, ... }:
 {
   imports = [
+    ./home-automation.nix
     ./monitoring.nix
     ./router.nix
   ];
