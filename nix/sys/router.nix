@@ -183,7 +183,7 @@ in
           };
           wifi4 = {
             enable = true;
-            #capabilities = [ "HT40" ];
+            capabilities = [ "HT40" ];
           };
           wifi5 = {
             enable = false;
@@ -206,16 +206,13 @@ in
       };
     };
     services.pppd = {
-      enable = true;
+      enable = false;
       peers = {
         telekom = {
           autostart = true;
           enable = true;
           config = ''
             plugin pppoe.so enp1s0
-
-            name "002249170648551138580459#0001@t-online.de"
-            password "70108941"
 
             persist
             maxfail 0
