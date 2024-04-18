@@ -1,11 +1,11 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.matthias.home-automation;
+  cfg = config.matthias.homeautomation;
   inherit (lib) mkOption types mkIf mkEnableOption;
 in
 {
-  options.matthias.home-automation = {
-    enable = mkEnableOption "home-automation";
+  options.matthias.homeautomation = {
+    enable = mkEnableOption "homeautomation";
   };
 
   config = mkIf cfg.enable {

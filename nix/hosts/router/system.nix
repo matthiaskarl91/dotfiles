@@ -5,6 +5,7 @@
   ];
   config.matthias = {
     monitoring.enable = true;
+    homeautomation.enable = true;
 
     router = {
       enable = true;
@@ -17,9 +18,6 @@
       };
     };
 
-    home-automation = {
-      enable = true;
-    };
   };
   config = {
     nixpkgs.config.allowUnfree = true;
