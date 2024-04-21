@@ -70,7 +70,11 @@ in
           "net.ipv6.conf.all.forwarding" = true;
         };
       };
+      extraModprobeConfig = ''
+        options cfg80211 ieee80211_regdom="DE"
+      '';
     };
+
 
     age.secrets.wifi_pw = {
       file = ../secrets/wifiPasswordFile.age;
@@ -173,8 +177,8 @@ in
       radios = {
         wlp5s0 = {
           countryCode = "DE";
-          band = "2g";
-          channel = 10;
+          band = "5g";
+          channel = 36;
           settings = {
             logger_syslog = 127;
             logger_syslog_level = 2;
@@ -183,10 +187,17 @@ in
           };
           wifi4 = {
             enable = true;
-            capabilities = [ "HT40" ];
+            capabilities = [ "HT40+" "SHORT-GI-40" "TX-STBC" "RX-STBC1" "DSSS_CCK-40" ];
+            require = false;
           };
           wifi5 = {
-            enable = false;
+            enable = true;
+            capabilities = [
+              "SHORT-GI-80"
+              "TX-STBC-2BY1"
+              "RX-STBC-1"
+              "MAX-MPDU-11454"
+            ];
           };
           networks.wlp5s0 = {
             ssid = "Mickey Mouse";
@@ -200,7 +211,10 @@ in
           };
           settings = {
             country_code = "DE";
-            ieee80211d = lib.mkForce true;
+            ieee80211h = false;
+            ieee8011n = true;
+            ieee8011ac = true;
+            wmm_enabled = true;
           };
         };
       };

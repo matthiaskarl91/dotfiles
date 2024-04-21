@@ -76,6 +76,20 @@
             inherit agenix;
           };
           modules = [
+            {
+              nixpkgs.overlays = [
+                (self: super: {
+                  linuxPackages_latest = super.linuxPackages_latest.extend (lpself: lpsuper: {
+                    ath10k = super.linuxPackages_latest.ath10k.overrideAttrs (oldAttrs: {
+                      patches = (oldAttrs.patches or [ ]) ++ [
+                        ./overlays/402-ath_regd_optional.patch
+                        ./overlays/403-world_regd_fixup.patch
+                      ];
+                    });
+                  });
+                })
+              ];
+            }
             ./configuration.nix
             ./hosts/router
             agenix.nixosModules.age
