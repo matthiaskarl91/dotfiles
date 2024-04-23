@@ -182,7 +182,7 @@ in
           networkConfig = {
             ConfigureWithoutCarrier = true;
           };
-          linkConfig.RequireForOnline = "no";
+          linkConfig.RequiredForOnline = "no";
         };
         "10-wan" = {
           matchConfig.Name = "enp1s0";
@@ -194,7 +194,7 @@ in
             IPForward = true;
           };
           # make routing on this interface a dependency for network-online.target
-          linkConfig.RequireForOnline = "routable";
+          linkConfig.RequiredForOnline = "routable";
         };
       };
 
@@ -269,7 +269,7 @@ in
           };
           settings = {
             country_code = "DE";
-            ieee80211h = false;
+            ieee80211h = lib.mkForce false;
             ieee8011n = true;
             ieee8011ac = true;
             wmm_enabled = true;
