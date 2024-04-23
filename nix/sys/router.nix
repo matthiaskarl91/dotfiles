@@ -68,6 +68,8 @@ in
         sysctl = {
           "net.ipv4.conf.all.forwarding" = true;
           "net.ipv6.conf.all.forwarding" = true;
+          "net.ipv4.conf.br-lan.rp_filter" = 1;
+          "net.ipv4.conf.enp1s0.rp_filter" = 1;
         };
       };
       extraModprobeConfig = ''
@@ -270,8 +272,6 @@ in
           settings = {
             country_code = "DE";
             ieee80211h = lib.mkForce false;
-            ieee8011n = true;
-            ieee8011ac = true;
             wmm_enabled = true;
           };
         };
