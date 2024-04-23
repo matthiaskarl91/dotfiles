@@ -7,6 +7,30 @@ return {
 	-- p = { require("telescope.builtin").lsp_document_symbols, "Document Symbols" },
 	-- P = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Workspace Symbols" },
 	f = { require("matthias.config.utils").telescope_git_or_file, "Find Files (Root)" },
+	l = {
+		name = "+LSP",
+		a = { vim.lsp.buf.code_action, "Code Action" },
+		A = { vim.lsp.buf.range_code_action, "Range Code Actions" },
+		s = { vim.lsp.buf.signature_help, "Display Signature Information" },
+		r = { vim.lsp.buf.rename, "Rename all references" },
+		f = { vim.lsp.buf.format, "Format" },
+		i = { require("telescope.builtin").lsp_implementations, "Implementation" },
+		l = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document Diagnostics (Trouble)" },
+		L = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics (Trouble)" },
+		w = { require("telescope.builtin").diagnostics, "Diagnostics" },
+		-- t = { require("telescope").extensions.refactoring.refactors, "Refactor" },
+		W = {
+			name = "+Workspace",
+			a = { vim.lsp.buf.add_workspace_folder, "Add Folder" },
+			r = { vim.lsp.buf.remove_workspace_folder, "Remove Folder" },
+			l = {
+				function()
+					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+				end,
+				"List Folders",
+			},
+		},
+	},
 	s = {
 		name = "+Search",
 		f = { "<cmd>Telescope find_files<cr>", "Find File (CWD)" },
