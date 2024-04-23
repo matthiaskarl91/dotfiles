@@ -89,66 +89,116 @@ in
       mode = "400";
     };
 
-    networking.hostName = "router";
-    networking.useDHCP = false;
-
     networking = {
-      nameservers = [ "1.1.1.1" "8.8.8.8" ];
-      firewall = {
+      hostName = "router";
+      useNetworkd = true;
+      useDHCP = false;
+
+      # No local firewall.
+      nat.enable = false;
+      firewall.enable = false;
+
+      nftables = {
         enable = true;
-        trustedInterfaces = [ "br0" ];
-        interfaces = {
-          enp1s0 = {
-            allowedTCPPorts = [ 80 443 ];
-            allowedUDPPorts = [
-              #Wireguard
-              666
-            ];
-          };
-          wlp5s0 = {
-            allowedTCPPorts = allowedTcpPorts;
-            allowedUDPPorts = allowedUdpPorts;
-          };
-        };
-      };
-      nat = {
-        enable = true;
-        internalInterfaces = [
-          "br0"
-          "wlp5s0"
-        ];
-        externalInterface = "enp1s0";
-      };
+        checkRuleset = false;
+        ruleset = ''
+          table inet filter {
+             flowtable f {
+               hook ingress priority 0;
+               devices = { "enp1s0", "enp2s0", "enp3s0", "enp4s0" };
+               flags offload;
+             }
 
-      bridges = {
-        br0 = {
-          interfaces = [
-            "enp2s0"
-            "wlp5s0"
-          ];
-        };
-      };
+            chain input {
+              type filter hook input priority 0; policy drop;
 
-      interfaces = {
-        enp1s0.useDHCP = true;
-        enp2s0.useDHCP = false;
-        enp3s0.useDHCP = false;
-        enp4s0.useDHCP = false;
-        wlp5s0.useDHCP = false;
-
-        br0 = {
-          useDHCP = false;
-          ipv4.addresses = [
-            {
-              address = "${cfg.privateSubnet}.1";
-              prefixLength = 24;
+              iifname { "br-lan" } accept comment "Allow local network to access the router"
+              iifname "enp1s0" ct state { established, related } accept comment "Allow established traffic"
+              iifname "enp1s0" icmp type { echo-request, destination-unreachable, time-exceeded } counter accept comment "Allow select ICMP"
+              iifname "enp1s0" counter drop comment "Drop all other unsolicited traffic from wan"
+              iifname "lo" accept comment "Accept everything from loopback interface"
             }
-          ];
-        };
+            chain forward {
+              type filter hook forward priority filter; policy drop;
+              ip protocol { tcp, udp } ct state { established } flow offload @f comment "Offload tcp/udp established traffic"
+
+              iifname { "br-lan" } oifname { "enp1s0" } accept comment "Allow trusted LAN to WAN"
+              iifname { "enp1s0" } oifname { "br-lan" } ct state { established, related } accept comment "Allow established back to LANs"
+            }
+          }
+
+          table ip nat {
+            chain postrouting {
+              type nat hook postrouting priority 100; policy accept;
+              oifname "enp1s0" masquerade
+            }
+          }
+        '';
       };
     };
 
-    networking.networkmanager.enable = false;
+    systemd.network = {
+      wait-online.anyInterface = true;
+      netdevs = {
+        # Create bridge
+        "20-br-lan" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "br-lan";
+          };
+        };
+      };
+      networks = {
+        "30-lan2" = {
+          matchConfig.Name = "enp2s0";
+          linkConfig.RequiredForOnline = "enslaved";
+          networkConfig = {
+            Bridge = "br-lan";
+            ConfigureWithoutCarrier = true;
+          };
+        };
+        "30-lan3" = {
+          matchConfig.Name = "enp3s0";
+          linkConfig.RequiredForOnline = "enslaved";
+          networkConfig = {
+            Bridge = "br-lan";
+            ConfigureWithoutCarrier = true;
+          };
+        };
+        "30-lan4" = {
+          matchConfig.Name = "enp4s0";
+          linkConfig.RequiredForOnline = "enslaved";
+          networkConfig = {
+            Bridge = "br-lan";
+            ConfigureWithoutCarrier = true;
+          };
+        };
+        "40-br-lan" = {
+          matchConfig.Name = "br-lan";
+          bridgeConfig = { };
+          address = [
+            "192.168.10.1/24"
+          ];
+          networkConfig = {
+            ConfigureWithoutCarrier = true;
+          };
+          linkConfig.RequireForOnline = "no";
+        };
+        "10-wan" = {
+          matchConfig.Name = "enp1s0";
+          networkConfig = {
+            DHCP = "ipv4";
+            DNSOverTLS = true;
+            DNSSEC = true;
+            IPv6PrivacyExtensions = false;
+            IPForward = true;
+          };
+          # make routing on this interface a dependency for network-online.target
+          linkConfig.RequireForOnline = "routable";
+        };
+      };
+
+    };
 
     services.dnsmasq = {
       enable = true;
@@ -157,14 +207,19 @@ in
         domain-needed = true;
         bogus-priv = true;
         no-resolv = true;
-        interface = [ "br0" "wlp5s0" ];
-        expand-hosts = true;
+
+        cache-size = 1000;
+
+        dhcp-range = [ "br-lan,192.168.10.50,192.168.10.254,24h" ];
+        interface = "br-lan";
+        dhcp-host = "192.168.10.1";
+
         local = "/home/";
         domain = "home";
-        dhcp-range = [
-          "192.168.1.10,192.168.1.254,24h"
-          "192.168.2.10,192.168.2.254,24h"
-        ];
+        expand-hosts = true;
+
+        no-hosts = true;
+        address = "/router.home/192.168.10.1";
       };
     };
 
@@ -206,6 +261,9 @@ in
               wpaPskFile = config.age.secrets.wifi_psk.path;
               saePasswordsFile = config.age.secrets.wifi_pw.path;
             };
+            settings = {
+              bridge = "br-lan";
+            };
             logLevel = 2;
             apIsolate = true;
           };
@@ -219,25 +277,5 @@ in
         };
       };
     };
-    services.pppd = {
-      enable = false;
-      peers = {
-        telekom = {
-          autostart = true;
-          enable = true;
-          config = ''
-            plugin pppoe.so enp1s0
-
-            persist
-            maxfail 0
-            holdoff 5
-
-            noipdefault
-            defaultroute
-          '';
-        };
-      };
-    };
-
   };
 }
