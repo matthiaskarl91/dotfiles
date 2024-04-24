@@ -250,9 +250,11 @@ in
           wifi5 = {
             enable = true;
             capabilities = [
+              "RXLDPC"
               "SHORT-GI-80"
               "TX-STBC-2BY1"
-              "RX-STBC-1"
+              "RX-ANTENNA-PATTERN"
+              "TX-ANTENNA-PATTERN"
               "MAX-MPDU-11454"
             ];
           };
