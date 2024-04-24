@@ -275,6 +275,14 @@ in
             country_code = "DE";
             ieee80211h = lib.mkForce false;
             wmm_enabled = true;
+            # these two are mandatory for wifi 5 & 6 to work
+            vht_oper_centr_freq_seg0_idx = 50;
+            he_oper_centr_freq_seg0_idx = 50;
+            # The "tx_queue_data2_burst" parameter in Linux refers to the burst size for
+            # transmitting data packets from the second data queue of a network interface.
+            # It determines the number of packets that can be sent in a burst.
+            # Adjusting this parameter can impact network throughput and latency.
+            tx_queue_data2_burst = 2;
           };
         };
       };
