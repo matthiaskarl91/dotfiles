@@ -249,6 +249,8 @@ in
           };
           wifi5 = {
             enable = true;
+            operatingChannelWidth = "80";
+            # from https://github.com/openwrt/openwrt/blob/main/package/network/config/wifi-scripts/files/lib/netifd/wireless/mac80211.sh
             capabilities = [
               "RXLDPC"
               "SHORT-GI-80"

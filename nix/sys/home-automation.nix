@@ -13,6 +13,7 @@ in
       enable = true;
       extraComponents = [
         "esphome"
+        "shelly"
         "met"
         "radio_browser"
       ];
