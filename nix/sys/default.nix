@@ -4,6 +4,7 @@
     ./home-automation.nix
     ./monitoring.nix
     ./router.nix
+    ./traefik.nix
   ];
 
   config.time.timeZone = "Europe/Berlin";

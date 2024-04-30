@@ -6,6 +6,7 @@
   config.matthias = {
     monitoring.enable = true;
     homeautomation.enable = true;
+    traefik.enable = true;
 
     router = {
       enable = true;
