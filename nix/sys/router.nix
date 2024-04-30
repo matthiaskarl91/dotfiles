@@ -161,8 +161,8 @@ in
           linkConfig.RequiredForOnline = "routable";
         };
       };
-
     };
+    services.resolved.enable = false;
 
     services.dnsmasq = {
       enable = true;
@@ -190,6 +190,7 @@ in
     networking.nftables = {
       enable = true;
       checkRuleset = false;
+      preCheckRuleset = "sed 's/.*devices.*/devices = { lo }/g' -i ruleset.conf";
       ruleset = ''
         table inet filter {
            flowtable f {
@@ -204,7 +205,7 @@ in
             iifname { "br-lan" } accept comment "Allow local network to access the router"
             iifname "enp1s0" ct state { established, related } accept comment "Allow established traffic"
             iifname "enp1s0" icmp type { echo-request, destination-unreachable, time-exceeded } counter accept comment "Allow select ICMP"
-            iifname "enp1s0" counter drop comment "Drop all other unsolicited traffic from wan"
+            iifname "enp1s0" counter drop comment "Drop all other unsolicited traffic from enp1s0"
             iifname "lo" accept comment "Accept everything from loopback interface"
           }
           chain forward {
