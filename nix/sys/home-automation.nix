@@ -20,7 +20,12 @@ in
       config = {
         default_config = { };
         http = {
-          trusted_proxies = [ "::1" "127.0.0.1" ];
+          ip_ban_enabled = true;
+          trusted_proxies = [
+            "::1"
+            "127.0.0.1"
+            "192.168.10.0/24"
+          ];
           use_x_forwarded_for = true;
         };
       };
