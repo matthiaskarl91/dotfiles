@@ -193,12 +193,6 @@ in
       preCheckRuleset = "sed 's/.*devices.*/devices = { lo }/g' -i ruleset.conf";
       ruleset = ''
         table inet filter {
-           flowtable f {
-             hook ingress priority 0;
-             devices = { "enp1s0", "enp2s0", "enp3s0", "enp4s0" };
-             flags offload;
-           }
-
           chain input {
             type filter hook input priority 0; policy drop;
 
@@ -210,7 +204,7 @@ in
           }
           chain forward {
             type filter hook forward priority filter; policy drop;
-            ip protocol { tcp, udp } ct state { established } flow offload @f comment "Offload tcp/udp established traffic"
+            ip protocol { tcp, udp } ct state { established } comment "Offload tcp/udp established traffic"
 
             iifname { "br-lan" } oifname { "enp1s0" } accept comment "Allow trusted LAN to WAN"
             iifname { "enp1s0" } oifname { "br-lan" } ct state { established, related } accept comment "Allow established back to LANs"
