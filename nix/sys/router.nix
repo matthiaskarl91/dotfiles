@@ -99,44 +99,6 @@ in
       # No local firewall.
       nat.enable = false;
       firewall.enable = false;
-
-      nftables = {
-        enable = true;
-        checkRuleset = false;
-        ruleset = ''
-          table inet filter {
-             flowtable f {
-               hook ingress priority 0;
-               devices = { "enp1s0", "enp2s0", "enp3s0", "enp4s0" };
-               flags offload;
-             }
-
-            chain input {
-              type filter hook input priority 0; policy drop;
-
-              iifname { "br-lan" } accept comment "Allow local network to access the router"
-              iifname "enp1s0" ct state { established, related } accept comment "Allow established traffic"
-              iifname "enp1s0" icmp type { echo-request, destination-unreachable, time-exceeded } counter accept comment "Allow select ICMP"
-              iifname "enp1s0" counter drop comment "Drop all other unsolicited traffic from wan"
-              iifname "lo" accept comment "Accept everything from loopback interface"
-            }
-            chain forward {
-              type filter hook forward priority filter; policy drop;
-              ip protocol { tcp, udp } ct state { established } flow offload @f comment "Offload tcp/udp established traffic"
-
-              iifname { "br-lan" } oifname { "enp1s0" } accept comment "Allow trusted LAN to WAN"
-              iifname { "enp1s0" } oifname { "br-lan" } ct state { established, related } accept comment "Allow established back to LANs"
-            }
-          }
-
-          table ip nat {
-            chain postrouting {
-              type nat hook postrouting priority 100; policy accept;
-              oifname "enp1s0" masquerade
-            }
-          }
-        '';
-      };
     };
 
     systemd.network = {
@@ -223,6 +185,44 @@ in
         no-hosts = true;
         address = "/router.home/192.168.10.1";
       };
+    };
+
+    networking.nftables = {
+      enable = true;
+      checkRuleset = false;
+      ruleset = ''
+        table inet filter {
+           flowtable f {
+             hook ingress priority 0;
+             devices = { "enp1s0", "enp2s0", "enp3s0", "enp4s0" };
+             flags offload;
+           }
+
+          chain input {
+            type filter hook input priority 0; policy drop;
+
+            iifname { "br-lan" } accept comment "Allow local network to access the router"
+            iifname "enp1s0" ct state { established, related } accept comment "Allow established traffic"
+            iifname "enp1s0" icmp type { echo-request, destination-unreachable, time-exceeded } counter accept comment "Allow select ICMP"
+            iifname "enp1s0" counter drop comment "Drop all other unsolicited traffic from wan"
+            iifname "lo" accept comment "Accept everything from loopback interface"
+          }
+          chain forward {
+            type filter hook forward priority filter; policy drop;
+            ip protocol { tcp, udp } ct state { established } flow offload @f comment "Offload tcp/udp established traffic"
+
+            iifname { "br-lan" } oifname { "enp1s0" } accept comment "Allow trusted LAN to WAN"
+            iifname { "enp1s0" } oifname { "br-lan" } ct state { established, related } accept comment "Allow established back to LANs"
+          }
+        }
+
+        table ip nat {
+          chain postrouting {
+            type nat hook postrouting priority 100; policy accept;
+            oifname "enp1s0" masquerade
+          }
+        }
+      '';
     };
 
     # Define host names to make dnsmasq resolve them, e.g. http://router.home
