@@ -8,7 +8,7 @@
   services.nix-daemon.enable = true;
   programs.zsh.enable = true;
 
-  system.defaults.dock.autohide = false;
+  system.defaults.dock.autohide = true;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
