@@ -19,7 +19,7 @@ return {
 
 			mason_null_ls.setup({
 				ensure_installed = {
-					"prettier", -- prettier formatter
+					"prettierd", -- prettier formatter
 					"stylua", -- lua formatter
 					"eslint_d", -- js linter
 					-- "golangci_lint", -- go linter
@@ -33,7 +33,7 @@ return {
 					"yamlfmt", -- yaml formatter
 					-- "spell", -- spell checker
 					"black", -- python formatter
-					"nixpkgs-fmt", -- nix formatter
+					"nixpkgs_fmt", -- nix formatter
 				},
 			})
 
@@ -41,7 +41,7 @@ return {
 			local diagnostics = null_ls.builtins.diagnostics
 			local code_actions = null_ls.builtins.code_actions
 
-			-- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+			local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 			null_ls.setup({
 				root_dir = null_ls_utils.root_pattern(".null-ls-root", "Makefile", ".git", "package.json"),
@@ -55,14 +55,15 @@ return {
 					formatting.shfmt,
 					formatting.yamlfmt,
 					formatting.black,
-					formatting["nixpkgs-fmt"],
+					formatting["nixpkgs_fmt"],
 
-					-- diagnostics.eslint_d,
-					-- diagnosticsueslint_d.with({ -- js/ts linter
-					--   condition = function(utils)
-					--     return utils.root_has_file({ ".eslintrc.js", ".eslintrc.cjs" }) -- only enable if root has .eslintrc.js or .eslintrc.cjs
-					--   end,
-					-- }),
+					--require("none-ls.diagnostics.eslint_d"),
+					--diagnostics.eslint_d,
+					--diagnostics.eslint_d.with({ -- js/ts linter
+					--		condition = function(utils)
+					--			return utils.root_has_file({ ".eslintrc.js", ".eslintrc.cjs" }) -- only enable if root has .eslintrc.js or .eslintrc.cjs
+					--		end,
+					--	}),
 					-- diagnostics.golangci_lint,
 					diagnostics.terraform_validate,
 					-- diagnostics.shellcheck,

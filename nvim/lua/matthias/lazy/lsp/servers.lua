@@ -46,7 +46,7 @@ return {
 	pyright = {},
 	-- golangci_lint_ls = {},
 	volar = {
-		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+		filetypes = { "typescript", "javascript", "vue" },
 		init_options = {
 			vue = {
 				hybridMode = false,

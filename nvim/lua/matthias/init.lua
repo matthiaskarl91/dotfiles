@@ -2,6 +2,7 @@ require("matthias.set")
 require("matthias.remap")
 
 require("matthias.lazy_init")
+require("matthias.config.autocmds")
 
 -- DO.not
 -- DO NOT INCLUDE THIS

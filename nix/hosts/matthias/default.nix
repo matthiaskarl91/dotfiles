@@ -3,7 +3,6 @@
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.trustedUsers = [ "root" "matthiaskarl" ];
-
   # Make sure the nix daemon always runs
   services.nix-daemon.enable = true;
   programs.zsh.enable = true;
@@ -41,6 +40,7 @@
     onActivation.autoUpdate = true;
     casks = [
       "obs"
+      "steam"
     ];
   };
 }

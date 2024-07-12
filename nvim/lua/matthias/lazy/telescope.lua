@@ -11,12 +11,12 @@ return {
 			"nvim-telescope/telescope-ui-select.nvim",
 			"telescope-dap.nvim",
 			"kkharji/sqlite.lua",
-			"nvim-telescope/telescope-frecency.nvim",
+			--"nvim-telescope/telescope-frecency.nvim",
 		},
 		config = function()
 			local telescope = require("telescope")
 			local actions = require("telescope.actions")
-			local trouble = require("trouble.providers.telescope")
+			local trouble = require("trouble.sources.telescope")
 			local icons = require("matthias.config.icons")
 
 			vim.api.nvim_create_autocmd("FileType", {
@@ -29,14 +29,14 @@ return {
 				end,
 			})
 
-			local function formattedName(_, path)
-				local tail = vim.fs.basename(path)
-				local parent = vim.fs.dirname(path)
-				if parent == "." then
-					return tail
-				end
-				return string.format("%s\t\t%s", tail, parent)
-			end
+			--local function formattedName(_, path)
+			--		local tail = vim.fs.basename(path)
+			--		local parent = vim.fs.dirname(path)
+			--		if parent == "." then
+			--			return tail
+			--		end
+			--		return string.format("%s\t\t%s", tail, parent)
+			--	end
 
 			telescope.setup({
 				file_ignore_patterns = { "%.git/." },
@@ -45,10 +45,10 @@ return {
 					mappings = {
 						i = {
 							["<esc>"] = actions.close,
-							["<C-t>"] = trouble.open_with_trouble,
+							["<C-t>"] = trouble.open,
 						},
 
-						n = { ["<C-t>"] = trouble.open_with_trouble },
+						n = { ["<C-t>"] = trouble.open },
 					},
 					previewer = false,
 					prompt_prefix = " " .. icons.ui.Telescope .. " ",
@@ -78,7 +78,7 @@ return {
 				pickers = {
 					find_files = {
 						previewer = false,
-						path_display = formattedName,
+						--path_display = formattedName,
 						layout_config = {
 							height = 0.4,
 							prompt_position = "top",
@@ -87,7 +87,7 @@ return {
 					},
 					git_files = {
 						previewer = false,
-						path_display = formattedName,
+						-- path_display = formattedName,
 						layout_config = {
 							height = 0.4,
 							prompt_position = "top",
@@ -163,25 +163,25 @@ return {
 							},
 						}),
 					},
-					frecency = {
-						db_safe_mode = false,
-						default_workspace = "CWD",
-						show_scores = true,
-						show_unindexed = true,
-						disable_devicons = false,
-						ignore_patterns = {
-							"*.git/*",
-							"*/tmp/*",
-							"*/lua-language-server/*",
-						},
-					},
+					--frecency = {
+					--	db_safe_mode = false,
+					--	default_workspace = "CWD",
+					--	show_scores = true,
+					--	show_unindexed = true,
+					--	disable_devicons = false,
+					--	ignore_patterns = {
+					--		"*.git/*",
+					--		"*/tmp/*",
+					--		"*/lua-language-server/*",
+					--	},
+					--},
 				},
 			})
 			telescope.load_extension("fzf")
 			telescope.load_extension("ui-select")
-			telescope.load_extension("refactoring")
+			--telescope.load_extension("refactoring")
 			telescope.load_extension("dap")
-			telescope.load_extension("frecency")
+			--telescope.load_extension("frecency")
 			telescope.load_extension("notify")
 		end,
 	},
