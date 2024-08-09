@@ -43,26 +43,6 @@
             environment.systemPackages = [ agenix.packages.${system}.default ];
           }
         ];
-        /*{
-          nix.distributedBuilds = true;
-          nix.buildMachines = [{
-          hostName = "builder@linux-builder";
-          sshKey = "/var/root/.ssh/builder_ed25519";
-          system = "x86_64-linux";
-          maxJobs = 4;
-          supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
-          }];
-
-          launchd.daemons.darwin-builder = {
-          command = "${darwin-builder.config.system.build.macos-builder-installer}/bin/create-builder";
-          serviceConfig = {
-          KeepAlive = true;
-          RunAtLoad = true;
-          StandardOutPath = "/var/log/darwin-builder.log";
-          StandardErrorPath = "/var/log/darwin-builder.log";
-          };
-          };
-          }*/
       };
       images = {
         pi = (self.nixosConfigurations.pi.extendModules {

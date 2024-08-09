@@ -15,8 +15,8 @@ return {
 		r = { vim.lsp.buf.rename, "Rename all references" },
 		f = { vim.lsp.buf.format, "Format" },
 		i = { require("telescope.builtin").lsp_implementations, "Implementation" },
-		l = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document Diagnostics (Trouble)" },
-		L = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics (Trouble)" },
+		l = { "<cmd>Trouble diagnostics toggle<cr>", "Document Diagnostics (Trouble)" },
+		L = { "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", "Workspace Diagnostics (Trouble)" },
 		w = { require("telescope.builtin").diagnostics, "Diagnostics" },
 		-- t = { require("telescope").extensions.refactoring.refactors, "Refactor" },
 		W = {
