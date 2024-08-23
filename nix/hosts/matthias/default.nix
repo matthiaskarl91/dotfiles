@@ -17,6 +17,7 @@
     home.homeDirectory = lib.mkForce "/Users/matthiaskarl/"; #c
     home.packages = with pkgs; [
       bottom
+      bun
       git
       direnv
       jq
