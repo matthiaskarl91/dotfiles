@@ -1,83 +1,92 @@
 return {
 	mode = { "n", "v" },
-	[";"] = { ":Alpha<CR>", "Dashboard" },
-	w = { ":w!<CR>", "Save" },
-	q = { ":confirm q<CR>", "Quit" },
+	--[";"] = { ":Alpha<CR>", "Dashboard" },
+	{ ";", ":Alpha<CR>", desc = "Dashboard" },
+	{ "w", ":w!<CR>", desc = "Save" },
+	{ "q", ":confirm q<CR>", desc = "Quit" },
+	{
+		"f",
+		function()
+			require("matthias.config.utils").telescope_git_or_file()
+		end,
+		desc = "Find Files (Root)",
+	},
+	{ "<leader>l", group = "+LSP" },
+	{ "<leader>la", vim.lsp.buf.code_action, desc = "Code Action" },
+	{ "<leader>lA", vim.lsp.buf.range_code_action, desc = "Range Code Action" },
+	{ "<leader>ls", vim.lsp.buf.signature_help, desc = "Display Signature Information" },
+	{ "<leader>lr", vim.lsp.buf.rename, desc = "Rename all references" },
+	{ "<leader>lf", vim.lsp.buf.format, desc = "Format" },
+	{
+		"<leader>li",
+		function()
+			require("telescope.builtin").lsp_implementations()
+		end,
+		desc = "Implementation",
+	},
+	{ "<leader>ll", "<cmd>Trouble diagnostics toggle<cr>", desc = "Document Diagnostics (Trouble)" },
+	{ "<leader>lL", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Workspace Diagnostics (Trouble)" },
+	{
+		"<leader>lw",
+		function()
+			require("telescope.builtin").diagnostics()
+		end,
+		desc = "Diagnostics",
+	},
+	{ "<leader>lW", group = "+Workspace" },
+	{ "<leader>lWa", vim.lsp.buf.add_workspace_folder, desc = "Add Folder" },
+	{ "<leader>lWr", vim.lsp.buf.remove_workspace_folder, desc = "Remove Folder" },
+	{
+		"<leader>lWl",
+		function()
+			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+		end,
+		desc = "List Folder",
+	},
 	-- h = { ":nohlsearch<CR>", "No Highlight" },
 	-- p = { require("telescope.builtin").lsp_document_symbols, "Document Symbols" },
 	-- P = { require("telescope.builtin").lsp_dynamic_workspace_symbols, "Workspace Symbols" },
-	f = { require("matthias.config.utils").telescope_git_or_file, "Find Files (Root)" },
-	l = {
-		name = "+LSP",
-		a = { vim.lsp.buf.code_action, "Code Action" },
-		A = { vim.lsp.buf.range_code_action, "Range Code Actions" },
-		s = { vim.lsp.buf.signature_help, "Display Signature Information" },
-		r = { vim.lsp.buf.rename, "Rename all references" },
-		f = { vim.lsp.buf.format, "Format" },
-		i = { require("telescope.builtin").lsp_implementations, "Implementation" },
-		l = { "<cmd>Trouble diagnostics toggle<cr>", "Document Diagnostics (Trouble)" },
-		L = { "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", "Workspace Diagnostics (Trouble)" },
-		w = { require("telescope.builtin").diagnostics, "Diagnostics" },
-		-- t = { require("telescope").extensions.refactoring.refactors, "Refactor" },
-		W = {
-			name = "+Workspace",
-			a = { vim.lsp.buf.add_workspace_folder, "Add Folder" },
-			r = { vim.lsp.buf.remove_workspace_folder, "Remove Folder" },
-			l = {
-				function()
-					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-				end,
-				"List Folders",
-			},
-		},
+	{ "<leader>f", "<cmd>Telescope find_files<cr>", desc = "Find File (CWD)" },
+	{ "<leader>s", group = "+Search" },
+	{ "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "Find Help" },
+	{ "<leader>sH", "<cmd>Telescope highlights<cr>", desc = "Find highlight groups" },
+	{ "<leader>sM", "<cmd>Telescope man_pages<cr>", desc = "Man Pages" },
+	{ "<leader>so", "<cmd>Telescope oldfiles<cr>", desc = "Open Recent File" },
+	{ "<leader>sR", "<cmd>Telescope registers<cr>", desc = "Registers" },
+	{ "<leader>st", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+	{ "<leader>sT", "<cmd>Telescope grep_string<cr>", desc = "Grep String" },
+	{ "<leader>sk", "<cmd>Telescope keymaps<cr>", desc = "Keymaps" },
+	{ "<leader>sC", "<cmd>Telescope commands<cr>", desc = "Commands" },
+	{ "<leader>sl", "<cmd>Telescope resume<cr>", desc = "Resume last search" },
+	{ "<leader>se", "<cmd>Telescope frecency<cr>", desc = "Frecency" },
+	{ "<leader>sb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+	{
+		"<leader>sN",
+		function()
+			require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
+		end,
+		desc = "Search Neovim Config",
 	},
-	s = {
-		name = "+Search",
-		f = { "<cmd>Telescope find_files<cr>", "Find File (CWD)" },
-		h = { "<cmd>Telescope help_tags<cr>", "Find Help" },
-		H = { "<cmd>Telescope highlights<cr>", "Find highlight groups" },
-		M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
-		o = { "<cmd>Telescope oldfiles<cr>", "Open Recent File" },
-		R = { "<cmd>Telescope registers<cr>", "Registers" },
-		t = { "<cmd>Telescope live_grep<cr>", "Live Grep" },
-		T = { "<cmd>Telescope grep_string<cr>", "Grep String" },
-		k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
-		C = { "<cmd>Telescope commands<cr>", "Commands" },
-		l = { "<cmd>Telescope resume<cr>", "Resume last search" },
-		c = { "<cmd>Telescope git_commits<cr>", "Git commits" },
-		B = { "<cmd>Telescope git_branches<cr>", "Git branches" },
-		m = { "<cmd>Telescope git_status<cr>", "Git status" },
-		S = { "<cmd>Telescope git_stash<cr>", "Git stash" },
-		e = { "<cmd>Telescope frecency<cr>", "Frecency" },
-		b = { "<cmd>Telescope buffers<cr>", "Buffers" },
-		d = {
-			name = "+DAP",
-			c = { "<cmd>Telescope dap commands<cr>", "Dap Commands" },
-			b = { "<cmd>Telescope dap list_breakpoints<cr>", "Dap Breakpoints" },
-			g = { "<cmd>Telescope dap configurations<cr>", "Dap Configurations" },
-			v = { "<cmd>Telescope dap variables<cr>", "Dap Variables" },
-			f = { "<cmd>Telescope dap frames<cr>", "Dap Frames" },
-		},
-		N = {
-			function()
-				require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
-			end,
-			"Search Neovim Config",
-		},
+	{ "<leader>sd", group = "+DAP" },
+	{ "<leader>sdc", "<cmd>Telescope dap commands<cr>", desc = "Dap Commands" },
+	{ "<leader>sdb", "<cmd>Telescope dap list_breakpoints<cr>", desc = "Dap Breakpoints" },
+	{ "<leader>sdg", "<cmd>Telescope dap configurations<cr>", desc = "Dap Configurations" },
+	{ "<leader>sdv", "<cmd>Telescope dap variables<cr>", desc = "Dap Variables" },
+	{ "<leader>sdf", "<cmd>Telescope dap frames<cr>", desc = "Dap Frames" },
+	{ "<leader>a", group = "harpoon" },
+	{
+		"<leader>aa",
+		function()
+			require("harpoon"):list():add()
+		end,
+		desc = "Append file in harpoon",
 	},
-	a = {
-		a = {
-			function()
-				require("harpoon"):list():add()
-			end,
-			"Append file in harpoon",
-		},
-		e = {
-			function()
-				local harpoon = require("harpoon")
-				harpoon.ui:toggle_quick_menu(harpoon:list())
-			end,
-			"Open harpoon menu",
-		},
+	{
+		"<leader>ae",
+		function()
+			local harpoon = require("harpoon")
+			harpoon.ui:toggle_quick_menu(harpoon:list())
+		end,
+		desc = "Open harpoon menu",
 	},
 }

@@ -35,6 +35,16 @@ return {
 			},
 		},
 	},
+	tailwindcss = {
+		tailwindCSS = {
+			experimental = {
+				classRegex = {
+					{ "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+					{ "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+				},
+			},
+		},
+	},
 	bashls = {
 		filetypes = { "sh", "zsh" },
 	},
