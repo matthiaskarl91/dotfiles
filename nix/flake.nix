@@ -18,21 +18,11 @@
       system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages."${system}";
       linuxSystem = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
-      darwin-builder = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          "${nixpkgs}/nixos/modules/profiles/macos-builder.nix"
-          {
-            virtualisation.host.pkgs = pkgs;
-            system.nixos.revision = nixpkgs.lib.mkForce null;
-          }
-        ];
-      };
     in
     {
       darwinConfigurations."Matthiascmdscale" = nix-darwin.lib.darwinSystem {
         #you can have multiple darwinConfigurations per flake, one per hostname
-        inherit system;
+        system = "aarch64-darwin";
         modules = [
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix

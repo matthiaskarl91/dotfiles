@@ -3,7 +3,7 @@ return {
 	--[";"] = { ":Alpha<CR>", "Dashboard" },
 	{ ";", ":Alpha<CR>", desc = "Dashboard" },
 	{ "w", ":w!<CR>", desc = "Save" },
-	{ "q", ":confirm q<CR>", desc = "Quit" },
+	--{ "q", ":confirm q<CR>", desc = "Quit" },
 	{
 		"f",
 		function()
