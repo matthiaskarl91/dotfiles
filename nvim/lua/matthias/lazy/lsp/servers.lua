@@ -55,14 +55,14 @@ return {
 	gopls = {},
 	pyright = {},
 	-- golangci_lint_ls = {},
-	volar = {
-		filetypes = { "typescript", "javascript", "vue" },
-		init_options = {
-			vue = {
-				hybridMode = false,
-			},
-		},
-	},
+	--volar = {
+	--		filetypes = { "typescript", "javascript", "vue" },
+	--		init_options = {
+	--			vue = {
+	--				hybridMode = false,
+	--			},
+	--		},
+	--	},
 	solidity_ls_nomicfoundation = {},
 	yamlls = {
 		cmd = { "yaml-language-server", "--stdio" },

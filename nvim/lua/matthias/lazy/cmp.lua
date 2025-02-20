@@ -73,6 +73,10 @@ return {
 					select = true,
 				}),
 				["<Tab>"] = cmp.mapping(function(fallback)
+					--local copilot = require("copilot.suggestion")
+					--
+					--					if copilot.is_visible() then
+					--						copilot.accept()
 					if cmp.visible() then
 						cmp.select_next_item()
 					elseif luasnip.expand_or_locally_jumpable() then
@@ -116,7 +120,7 @@ return {
 						vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind)
 						-- Source
 						vim_item.menu = ({
-							copilot = "[Copilot]",
+							--copilot = "[Copilot]",
 							nvim_lsp = "[LSP]",
 							nvim_lua = "[Lua]",
 							luasnip = "[LuaSnip]",
