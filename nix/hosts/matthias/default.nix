@@ -8,6 +8,7 @@
   programs.zsh.enable = true;
 
   # system.defaults.dock.autohide = true;
+  system.stateVersion = 5;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -18,6 +19,7 @@
     home.packages = with pkgs; [
       bottom
       bun
+      buf
       git
       direnv
       jq
