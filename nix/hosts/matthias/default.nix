@@ -2,9 +2,7 @@
 { pkgs, config, lib, ... }:
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.trustedUsers = [ "root" "matthiaskarl" ];
-  # Make sure the nix daemon always runs
-  services.nix-daemon.enable = true;
+  nix.settings.trusted-users = [ "root" "matthiaskarl" ];
   programs.zsh.enable = true;
 
   # system.defaults.dock.autohide = true;
@@ -33,6 +31,7 @@
       utm
       putty
       tmux
+      lazygit
     ];
 
     home.stateVersion = "23.05";
