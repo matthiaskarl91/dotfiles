@@ -27,8 +27,7 @@
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix
           ./home/darwin/wm.nix
-          #./home/darwin/skhd.nix
-          #./home/darwin/yabai.nix
+          ./home/darwin/alacritty.nix
           agenix.nixosModules.default
           {
             environment.systemPackages = [ agenix.packages.${system}.default ];
