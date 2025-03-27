@@ -5,33 +5,69 @@
   nix.settings.trusted-users = [ "root" "matthiaskarl" ];
   programs.zsh.enable = true;
 
+  environment.systemPackages = [
+    pkgs.alacritty
+  ];
+
+  #defaultApplications.term = {
+  #  cmd = "${pkgs.alacritty}/bin/alacritty";
+  #  desktop = "alacritty";
+  #};
+
   # system.defaults.dock.autohide = true;
   system.stateVersion = 5;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.users.matthiaskarl = { pkgs, lib, ... }: {
-
+  home-manager.backupFileExtension = "backup";
+  home-manager.users.matthiaskarl = { pkgs, lib, config, ... }: {
+    # TODO: temporary hack from https://github.com/nix-community/home-manager/issues/1341#issuecomment-778820334
+    # Even though nix-darwin support symlink to ~/Application or ~/Application/Nix Apps
+    # Spotlight doesn't like symlink as all or it won't index them
+    home.activation = {
+      copyApplications =
+        let
+          apps = pkgs.buildEnv {
+            name = "home-manager-applications";
+            paths = config.home.packages;
+            pathsToLink = "/Applications";
+          };
+        in
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          baseDir="$HOME/Applications/Home Manager Apps"
+          if [ -d "$baseDir" ]; then
+            rm -rf "$baseDir"
+          fi
+          mkdir -p "$baseDir"
+          for appFile in ${apps}/Applications/*; do
+            target="$baseDir/$(basename "$appFile")"
+            $DRY_RUN_CMD cp ''${VERBOSE_ARG:+-v} -fHRL "$appFile" "$baseDir"
+            $DRY_RUN_CMD chmod ''${VERBOSE_ARG:+-v} -R +w "$target"
+          done
+        '';
+    };
     home.username = "matthiaskarl";
     home.homeDirectory = lib.mkForce "/Users/matthiaskarl/"; #c
     home.packages = with pkgs; [
+      alacritty
       bottom
       bun
       buf
-      git
       direnv
-      jq
+      esphome
+      git
       jless
+      jq
+      lazygit
       modd
       nodePackages_latest.pnpm
-      yabai
-      skhd
-      rustup
-      esphome
-      utm
       putty
+      rustup
+      skhd
       tmux
-      lazygit
+      utm
+      yabai
+      zsh
     ];
 
     home.stateVersion = "23.05";

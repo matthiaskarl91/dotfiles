@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  services.yabai.enable = true;
+  services.yabai.enable = false;
   services.yabai.package = pkgs.yabai;
   services.yabai.enableScriptingAddition = false;
   services.yabai.extraConfig = ''
@@ -27,11 +27,11 @@
     yabai -m rule --add app="^1Password$" manage=off
   '';
 
-  services.skhd.enable = true;
+  services.skhd.enable = false;
   services.skhd.package = pkgs.skhd;
   services.skhd.skhdConfig = ''
     ctrl + alt - q: yabai --stop-service
-    ctrl + alt -s: yabai --start-service
+    ctrl + alt - s: yabai --start-service
 
     # changing window focus
     alt - s: yabai -m window --focus south
