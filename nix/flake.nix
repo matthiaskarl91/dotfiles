@@ -12,23 +12,13 @@
   };
 
   outputs = { self, nix-darwin, nixpkgs, home-manager, nixos-hardware, agenix, ... }@inputs:
-    let
-      pkgs = nixpkgs.legacyPackages."${system}";
-    in
     {
       darwinConfigurations."Matthiass-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        system = system;
+        system = "x86_64-darwin";
         modules = [
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix
-          #./home/darwin/wm.nix
-          #./home/darwin/alacritty.nix
           agenix.nixosModules.default
-          {
-            environment.systemPackages =  [
-              agenix.packages.${system}.default
-            ];
-          }
         ];
       };
       images = {
