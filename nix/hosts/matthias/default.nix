@@ -22,6 +22,31 @@
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "backup";
   home-manager.users.matthias = { pkgs, lib, config, ... }: {
+    home.username = "matthias";
+    home.homeDirectory = "/Users/matthias";
+    home.packages = with pkgs; [
+      bottom
+      bun
+      buf
+      direnv
+      esphome
+      git
+      jless
+      jq
+      lazygit
+      modd
+      nodePackages_latest.pnpm
+      putty
+      rustup
+      skhd
+      tmux
+      utm
+      yabai
+      zsh
+    ];
+
+    home.stateVersion = "23.05";
+
     # TODO: temporary hack from https://github.com/nix-community/home-manager/issues/1341#issuecomment-778820334
     # Even though nix-darwin support symlink to ~/Application or ~/Application/Nix Apps
     # Spotlight doesn't like symlink as all or it won't index them
@@ -47,30 +72,6 @@
           done
         '';
     };
-    home.username = "matthias";
-    home.homeDirectory = lib.mkForce "/Users/matthias/"; #c
-    home.packages = with pkgs; [
-      bottom
-      bun
-      buf
-      direnv
-      esphome
-      git
-      jless
-      jq
-      lazygit
-      modd
-      nodePackages_latest.pnpm
-      putty
-      rustup
-      skhd
-      tmux
-      utm
-      yabai
-      zsh
-    ] ;
-
-    home.stateVersion = "23.05";
   };
 
   homebrew = {
