@@ -10,18 +10,10 @@
     pkgs.yabai
   ];
 
-  #defaultApplications.term = {
-  #  cmd = "${pkgs.alacritty}/bin/alacritty";
-  #  desktop = "alacritty";
-  #};
-
-  # system.defaults.dock.autohide = true;
-  system.stateVersion = 5;
-
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "backup";
-  home-manager.users.matthias = { pkgs, lib, config, ... }: {
+  home-manager.users.matthias = {
     home.username = "matthias";
     home.homeDirectory = "/Users/matthias";
     home.packages = with pkgs; [
@@ -44,34 +36,7 @@
       yabai
       zsh
     ];
-
     home.stateVersion = "23.05";
-
-    # TODO: temporary hack from https://github.com/nix-community/home-manager/issues/1341#issuecomment-778820334
-    # Even though nix-darwin support symlink to ~/Application or ~/Application/Nix Apps
-    # Spotlight doesn't like symlink as all or it won't index them
-    home.activation = {
-      copyApplications =
-        let
-          apps = pkgs.buildEnv {
-            name = "home-manager-applications";
-            paths = config.home.packages;
-            pathsToLink = "/Applications";
-          };
-        in
-        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          baseDir="$HOME/Applications/Home Manager Apps"
-          if [ -d "$baseDir" ]; then
-            rm -rf "$baseDir"
-          fi
-          mkdir -p "$baseDir"
-          for appFile in ${apps}/Applications/*; do
-            target="$baseDir/$(basename "$appFile")"
-            $DRY_RUN_CMD cp ''${VERBOSE_ARG:+-v} -fHRL "$appFile" "$baseDir"
-            $DRY_RUN_CMD chmod ''${VERBOSE_ARG:+-v} -R +w "$target"
-          done
-        '';
-    };
   };
 
   homebrew = {
