@@ -2,7 +2,7 @@
 { pkgs, config, lib, ... }:
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.trusted-users = [ "root" "matthiaskarl" ];
+  nix.settings.trusted-users = [ "root" "matthias" ];
   programs.zsh.enable = true;
 
   environment.systemPackages = [
@@ -20,7 +20,7 @@
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "backup";
-  home-manager.users.matthiaskarl = { pkgs, lib, config, ... }: {
+  home-manager.users.matthias = { pkgs, lib, config, ... }: {
     # TODO: temporary hack from https://github.com/nix-community/home-manager/issues/1341#issuecomment-778820334
     # Even though nix-darwin support symlink to ~/Application or ~/Application/Nix Apps
     # Spotlight doesn't like symlink as all or it won't index them
@@ -46,8 +46,8 @@
           done
         '';
     };
-    home.username = "matthiaskarl";
-    home.homeDirectory = lib.mkForce "/Users/matthiaskarl/"; #c
+    home.username = "matthias";
+    home.homeDirectory = lib.mkForce "/Users/matthias/"; #c
     home.packages = with pkgs; [
       alacritty
       bottom
