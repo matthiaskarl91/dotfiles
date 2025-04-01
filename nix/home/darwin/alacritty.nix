@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 {
-  home-manager.users.matthiaskarl.programs.alacritty = {
+  home-manager.users.matthias.programs.alacritty = {
     enable = true;
     settings = {
       shell.program = "${pkgs.zsh}/bin/zsh";
