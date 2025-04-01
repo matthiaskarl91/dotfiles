@@ -20,7 +20,7 @@
       linuxSystem = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
     in
     {
-      darwinConfigurations."Matthiascmdscale" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."matthias-mbp2016" = nix-darwin.lib.darwinSystem {
         #you can have multiple darwinConfigurations per flake, one per hostname
         system = "aarch64-darwin";
         modules = [
