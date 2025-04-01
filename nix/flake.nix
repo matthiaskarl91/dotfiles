@@ -11,26 +11,23 @@
     agenix.url = "github:ryantm/agenix";
   };
 
-  outputs = { self, nix-darwin, nixpkgs, home-manager, nixos-hardware, agenix }@inputs:
+  outputs = { self, nix-darwin, nixpkgs, home-manager, nixos-hardware, agenix, ... }@inputs:
     let
-      matthias = { inherit nixpkgs; };
-      inherit (nix-darwin.lib) darwinSystem;
-      system = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages."${system}";
-      linuxSystem = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
     in
     {
       darwinConfigurations."Matthiass-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        #you can have multiple darwinConfigurations per flake, one per hostname
-        system = "aarch64-darwin";
+        system = system;
         modules = [
           home-manager.darwinModules.home-manager
           ./hosts/matthias/default.nix
-          ./home/darwin/wm.nix
-          ./home/darwin/alacritty.nix
+          #./home/darwin/wm.nix
+          #./home/darwin/alacritty.nix
           agenix.nixosModules.default
           {
-            environment.systemPackages = [ agenix.packages.${system}.default ];
+            environment.systemPackages =  [
+              agenix.packages.${system}.default
+            ];
           }
         ];
       };

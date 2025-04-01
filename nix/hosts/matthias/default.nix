@@ -5,8 +5,9 @@
   nix.settings.trusted-users = [ "root" "matthias" ];
   programs.zsh.enable = true;
 
-  environment.systemPackages = [
+  environment.systemPackages =  [
     pkgs.alacritty
+    pkgs.yabai
   ];
 
   #defaultApplications.term = {
@@ -49,7 +50,6 @@
     home.username = "matthias";
     home.homeDirectory = lib.mkForce "/Users/matthias/"; #c
     home.packages = with pkgs; [
-      alacritty
       bottom
       bun
       buf
@@ -68,7 +68,7 @@
       utm
       yabai
       zsh
-    ];
+    ] ;
 
     home.stateVersion = "23.05";
   };
